@@ -677,6 +677,19 @@ h2.section-title {
   font-size: 0.95rem;
 }
 
+/* ---------- Reveal ao rolar ----------
+   Classe em vez de transform inline: assim o tilt 3D (que também escreve
+   em .style.transform) nunca sobrescreve o estado de entrada. */
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.8,.2,1);
+}
+.reveal-pending.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ---------- Botão voltar ao topo ---------- */
 .back-to-top {
   position: fixed;
@@ -713,6 +726,24 @@ summary:focus-visible,
   outline: 2px solid var(--cyan);
   outline-offset: 3px;
   border-radius: 8px;
+}
+
+.os-card.is-detected {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px rgba(79,209,255,0.35), var(--shadow-soft);
+}
+.os-detected-badge {
+  position: absolute;
+  top: 18px; right: 18px;
+  z-index: 2;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #06080c;
+  background: var(--cyan);
+  padding: 5px 11px;
+  border-radius: 100px;
 }
 
 /* ---------- Footer ---------- */
