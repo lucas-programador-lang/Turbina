@@ -239,6 +239,7 @@
       revealIo.observe(el);
     });
   }
+
   /* ---------- Detecção de sistema operacional (recomendação, não bloqueio) ---------- */
   const detectOS = () => {
     const ua = (navigator.userAgent || '').toLowerCase();
@@ -282,5 +283,109 @@
         const card = document.querySelector(`.os-${os}`);
         if (card) lockCard(card);
       });
+  }
+
+  /* ---------- Toast de download por sistema operacional ----------
+     Dispara UMA única vez por visita: no primeiro que acontecer entre
+     45s de permanência na página OU o mouse saindo pelo topo da janela
+     (exit-intent). Depois que a pessoa clicar em baixar ou fechar o
+     toast, ele não aparece mais nessa nem em visitas futuras
+     (guardado em localStorage). Também não dispara se a aba estiver
+     em segundo plano no momento do gatilho. */
+  if (detectedOS) {
+    const STORAGE_KEY = 'turbina-toast-dismissed';
+    const labels = { win: 'Windows', mac: 'macOS', linux: 'Linux' };
+    const targetCard = document.querySelector(`.os-${detectedOS}`);
+    const targetBtn = targetCard ? targetCard.querySelector('.os-download') : null;
+
+    let alreadyHandled = localStorage.getItem(STORAGE_KEY) === '1';
+    let toastEl = null;
+    let toastTimer = null;
+
+    const persistDismissed = () => {
+      alreadyHandled = true;
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) { /* localStorage indisponível: ok ignorar */ }
+    };
+
+    const hideToast = () => {
+      if (toastEl) toastEl.classList.remove('is-visible');
+      if (toastTimer) clearTimeout(toastTimer);
+    };
+
+    const buildToast = () => {
+      const toast = document.createElement('div');
+      toast.className = 'os-toast';
+      toast.setAttribute('role', 'status');
+      toast.innerHTML = `
+        <span class="os-toast-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12"></path>
+            <path d="m7 10 5 5 5-5"></path>
+            <path d="M5 21h14"></path>
+          </svg>
+        </span>
+        <span class="os-toast-body">
+          <p>Detectamos que você está no <strong>${labels[detectedOS]}</strong>. Que tal baixar o Turbina para o seu sistema?</p>
+          <a class="os-toast-link" href="#${detectedOS}">Baixar para ${labels[detectedOS]}</a>
+        </span>
+        <button type="button" class="os-toast-close" aria-label="Fechar aviso">&times;</button>
+      `;
+      document.body.appendChild(toast);
+
+      toast.querySelector('.os-toast-link').addEventListener('click', () => {
+        persistDismissed();
+        hideToast();
+      });
+      toast.querySelector('.os-toast-close').addEventListener('click', () => {
+        persistDismissed();
+        hideToast();
+      });
+
+      return toast;
+    };
+
+    const showToastOnce = () => {
+      if (alreadyHandled) return;
+      if (document.hidden) return; // não mostra com a aba em segundo plano
+
+      // se a pessoa já clicou em baixar diretamente no card, não precisa do toast
+      alreadyHandled = true;
+
+      if (!toastEl) toastEl = buildToast();
+      requestAnimationFrame(() => toastEl.classList.add('is-visible'));
+
+      // some sozinho depois de um tempo, mas continua "usado" (não repete)
+      toastTimer = setTimeout(() => toastEl.classList.remove('is-visible'), 9000);
+    };
+
+    // gatilho 1: clicar em baixar diretamente cancela a necessidade do toast
+    if (targetBtn) {
+      targetBtn.addEventListener('click', () => {
+        persistDismissed();
+        hideToast();
+      });
+    }
+
+    // gatilho 2: permanência de 45s na página
+    let stayTimer = null;
+    if (!alreadyHandled) {
+      stayTimer = setTimeout(showToastOnce, 45000);
+    }
+
+    // gatilho 3: exit-intent (mouse saindo pela borda superior da janela)
+    const onExitIntent = (e) => {
+      if (alreadyHandled) {
+        document.removeEventListener('mouseout', onExitIntent);
+        return;
+      }
+      if (e.clientY <= 0) {
+        if (stayTimer) clearTimeout(stayTimer);
+        showToastOnce();
+        document.removeEventListener('mouseout', onExitIntent);
+      }
+    };
+    if (!alreadyHandled && hasFinePointer) {
+      document.addEventListener('mouseout', onExitIntent);
+    }
   }
 })();
