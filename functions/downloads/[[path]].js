@@ -38,22 +38,52 @@ const OS_LABEL = {
 const OS_ICON = {
   win: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5L10.5 4.4V11.3H3V5.5Z"/><path d="M11.4 4.3L21 3V11.2H11.4V4.3Z"/><path d="M3 12.2H10.5V19.1L3 18V12.2Z"/><path d="M11.4 12.2H21V20.5L11.4 19.2V12.2Z"/></svg>`,
   mac: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 2c.1 1.1-.3 2.2-1 3-.7.9-1.9 1.6-3 1.5-.2-1.1.3-2.2 1-3 .8-.9 2.1-1.5 3-1.5zM20.8 17c-.6 1.3-.9 1.9-1.6 3-1 1.5-2.5 3.4-4.3 3.4-1.6 0-2-1-4.1-1-2.2 0-2.6 1-4.2 1-1.8 0-3.2-1.7-4.2-3.2C-.1 16.6-.6 11 1.4 8c1.3-1.9 3.3-3 5.3-3 1.7 0 3 .9 4 .9.9 0 2.5-1.1 4.3-1 .7 0 2.7.3 4 2-2.2 1.3-3.4 3.6-3.2 6.1.2 2.4 1.8 4.1 4 4z"/></svg>`,
-  linux: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <g transform="scale(0.24)">
-      <path d="M50 6 C39 6 31 15 31 25.5 C31 30.5 32.8 34.5 35.5 37.8 C26 44.5 18.5 56.5 16.5 68 C14 82 18 94 50 94 C82 94 86 82 83.5 68 C81.5 56.5 74 44.5 64.5 37.8 C67.2 34.5 69 30.5 69 25.5 C69 15 61 6 50 6 Z" fill="#0a0a0a"/>
-      <path d="M22 52 C12 57 6 68 8 79 C9.5 87 18 91 25.5 87.5 C30 85.5 31.5 78 29.5 69 C28 62 25.5 56 22 52Z" fill="#0a0a0a"/>
-      <path d="M78 52 C88 57 94 68 92 79 C90.5 87 82 91 74.5 87.5 C70 85.5 68.5 78 70.5 69 C72 62 74.5 56 78 52Z" fill="#0a0a0a"/>
-      <ellipse cx="83" cy="58" rx="7.5" ry="9" fill="#0a0a0a"/>
-      <ellipse cx="50" cy="62" rx="19" ry="27" fill="#f5f5f5"/>
-      <ellipse cx="41" cy="22" rx="7.2" ry="9" fill="#f2f2f2"/>
-      <ellipse cx="59" cy="22" rx="7.2" ry="9" fill="#f2f2f2"/>
-      <circle cx="42.3" cy="24.5" r="3.4" fill="#0a0a0a"/>
-      <circle cx="57.7" cy="24.5" r="3.4" fill="#0a0a0a"/>
-      <path d="M36 31.5 C36 27 42.5 24 50 24 C57.5 24 64 27 64 31.5 C64 37.5 58 41.5 50 41.5 C42 41.5 36 37.5 36 31.5Z" fill="#f5a623" stroke="#d1830f" stroke-width="1.3"/>
-      <path d="M38.5 32.5 Q50 38.5 61.5 32.5" fill="none" stroke="#d1830f" stroke-width="1.4" stroke-linecap="round"/>
-      <path d="M28 88 C22 89.5 18 94 21 97.5 C24 100.5 30 99 32.5 94.5 C34.5 91 32.5 87 28 88Z" fill="#f5a623" stroke="#d1830f" stroke-width="1"/>
-      <path d="M72 88 C78 89.5 82 94 79 97.5 C76 100.5 70 99 67.5 94.5 C65.5 91 67.5 87 72 88Z" fill="#f5a623" stroke="#d1830f" stroke-width="1"/>
-    </g>
+  linux: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 280">
+    <defs>
+      <radialGradient id="corpoGrad" cx="50%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#444444" />
+        <stop offset="40%" stop-color="#111111" />
+        <stop offset="100%" stop-color="#000000" />
+      </radialGradient>
+      <linearGradient id="brilhoCabeca" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+      </linearGradient>
+      <radialGradient id="barrigaGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="70%" stop-color="#FFFFFF" />
+        <stop offset="95%" stop-color="#EAEAEA" />
+        <stop offset="100%" stop-color="#D0D0D0" />
+      </radialGradient>
+      <linearGradient id="amareloGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#FFF066" />
+        <stop offset="40%" stop-color="#F2B705" />
+        <stop offset="100%" stop-color="#C48200" />
+      </linearGradient>
+      <filter id="sombra">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.3 0"/>
+      </filter>
+    </defs>
+    <path d="M 125 15 C 70 15 65 80 65 110 C 65 130 50 155 40 185 C 25 215 45 255 125 255 C 205 255 225 215 210 185 C 200 155 185 130 185 110 C 185 80 180 15 125 15 Z" fill="url(#corpoGrad)" />
+    <ellipse cx="125" cy="30" rx="35" ry="12" fill="url(#brilhoCabeca)" />
+    <path d="M 68 130 C 40 150 30 190 45 215 C 55 225 65 210 65 190 C 65 170 73 145 78 135 Z" fill="#050505" />
+    <ellipse cx="50" cy="180" rx="6" ry="20" fill="#FFFFFF" opacity="0.1" transform="rotate(-20 50 180)" />
+    <path d="M 182 130 C 210 150 220 190 205 215 C 195 225 185 210 185 190 C 185 170 177 145 172 135 Z" fill="#050505" />
+    <ellipse cx="200" cy="180" rx="6" ry="20" fill="#FFFFFF" opacity="0.1" transform="rotate(20 200 180)" />
+    <ellipse cx="125" cy="115" rx="55" ry="15" fill="#000000" filter="url(#sombra)" />
+    <path d="M 125 105 C 80 105 70 140 70 180 C 70 225 90 250 125 250 C 160 250 180 225 180 180 C 180 140 170 105 125 105 Z" fill="url(#barrigaGrad)" />
+    <path d="M 125 120 L 125 230" stroke="#EAEAEA" stroke-width="3" opacity="0.7" />
+    <ellipse cx="102" cy="70" rx="15" ry="22" fill="#FFFFFF" />
+    <ellipse cx="104" cy="74" rx="7" ry="10" fill="#000000" />
+    <circle cx="102" cy="70" r="3" fill="#FFFFFF" />
+    <ellipse cx="148" cy="70" rx="15" ry="22" fill="#FFFFFF" />
+    <ellipse cx="146" cy="74" rx="7" ry="10" fill="#000000" />
+    <circle cx="144" cy="70" r="3" fill="#FFFFFF" />
+    <path d="M 90 85 C 90 70 160 70 160 85 C 160 100 155 115 125 115 C 95 115 90 100 90 85 Z" fill="url(#amareloGrad)" />
+    <path d="M 92 83 Q 125 98 158 83" stroke="#A36200" stroke-width="2" fill="none" />
+    <ellipse cx="125" cy="80" rx="25" ry="6" fill="#FFFFFF" opacity="0.3" />
+    <path d="M 40 230 C 15 225 5 255 25 268 C 45 280 85 270 95 250 C 75 240 55 235 40 230 Z" fill="url(#amareloGrad)" />
+    <path d="M 210 230 C 235 225 245 255 225 268 C 205 280 165 270 155 250 C 175 240 195 235 210 230 Z" fill="url(#amareloGrad)" />
   </svg>`,
 };
 
@@ -368,7 +398,7 @@ function forbiddenResponse(requiredOS, detectedOS) {
   .icon-ring.icon-win svg { color: var(--win); }
   .icon-ring.icon-mac svg { color: var(--mac); }
   .icon-ring.icon-linux { background: rgba(245,183,0,0.08); border-color: rgba(245,183,0,0.28); box-shadow: 0 0 40px rgba(245,183,0,0.12); }
-  .icon-ring.icon-linux svg { width: 36px; height: 36px; }
+  .icon-ring.icon-linux svg { width: 34px; height: 38px; }
 
   .eyebrow {
     display: inline-flex;
