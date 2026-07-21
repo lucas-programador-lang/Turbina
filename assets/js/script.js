@@ -240,6 +240,26 @@
     });
   }
 
+  /* ---------- Detecção de dispositivo móvel / tablet ----------
+     Independente do OS: só serve pra saber se dá pra baixar o
+     instalador de desktop ou não. */
+  const isMobileOrTablet = () => {
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const platform = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '').toLowerCase();
+    const combined = `${platform} ${ua}`;
+
+    if (/android|iphone|ipod|ipad|mobile|tablet/.test(combined)) return true;
+
+    // iPadOS moderno se anuncia como "MacIntel" no user agent, então
+    // sem o teste de touch acima ele passaria como desktop Mac normal.
+    if (combined.includes('mac') && navigator.maxTouchPoints > 1) return true;
+
+    // Client Hints (Chrome/Edge no Android costumam expor isso)
+    if (navigator.userAgentData && navigator.userAgentData.mobile) return true;
+
+    return false;
+  };
+
   /* ---------- Detecção de sistema operacional (recomendação, não bloqueio) ---------- */
   const detectOS = () => {
     const ua = (navigator.userAgent || '').toLowerCase();
@@ -255,20 +275,27 @@
     return null;
   };
 
+  const mobileDevice = isMobileOrTablet();
   const detectedOS = detectOS();
 
-  const lockCard = (card) => {
+  const lockCard = (card, message) => {
     card.classList.add('is-locked');
     const btn = card.querySelector('.os-download');
     if (!btn) return;
     btn.setAttribute('aria-disabled', 'true');
-    btn.textContent = 'Indisponível para o seu sistema';
+    btn.textContent = message || 'Indisponível para o seu sistema';
     btn.addEventListener('click', (e) => {
       e.preventDefault();
     });
   };
 
-  if (detectedOS) {
+  if (mobileDevice) {
+    // celular/tablet: trava os três, não faz sentido recomendar nenhum
+    ['win', 'mac', 'linux'].forEach((os) => {
+      const card = document.querySelector(`.os-${os}`);
+      if (card) lockCard(card, 'Disponível apenas no computador');
+    });
+  } else if (detectedOS) {
     const detectedCard = document.querySelector(`.os-${detectedOS}`);
     if (detectedCard) {
       detectedCard.classList.add('is-detected');
@@ -291,7 +318,10 @@
      (exit-intent). Depois que a pessoa clicar em baixar ou fechar o
      toast, ele não aparece mais nessa nem em visitas futuras
      (guardado em localStorage). Também não dispara se a aba estiver
-     em segundo plano no momento do gatilho. */
+     em segundo plano no momento do gatilho.
+     Continua condicionado a `detectedOS`, que já é `null` em qualquer
+     mobile/tablet — então o toast automaticamente não aparece pra quem
+     está no celular, sem precisar checar `mobileDevice` aqui também. */
   if (detectedOS) {
     const STORAGE_KEY = 'turbina-toast-dismissed';
     const SITE_URL = 'https://turbina-6fh.pages.dev';
