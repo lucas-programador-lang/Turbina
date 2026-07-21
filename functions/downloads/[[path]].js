@@ -38,19 +38,24 @@ const OS_LABEL = {
 const OS_ICON = {
   win: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5L10.5 4.4V11.3H3V5.5Z"/><path d="M11.4 4.3L21 3V11.2H11.4V4.3Z"/><path d="M3 12.2H10.5V19.1L3 18V12.2Z"/><path d="M11.4 12.2H21V20.5L11.4 19.2V12.2Z"/></svg>`,
   mac: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 2c.1 1.1-.3 2.2-1 3-.7.9-1.9 1.6-3 1.5-.2-1.1.3-2.2 1-3 .8-.9 2.1-1.5 3-1.5zM20.8 17c-.6 1.3-.9 1.9-1.6 3-1 1.5-2.5 3.4-4.3 3.4-1.6 0-2-1-4.1-1-2.2 0-2.6 1-4.2 1-1.8 0-3.2-1.7-4.2-3.2C-.1 16.6-.6 11 1.4 8c1.3-1.9 3.3-3 5.3-3 1.7 0 3 .9 4 .9.9 0 2.5-1.1 4.3-1 .7 0 2.7.3 4 2-2.2 1.3-3.4 3.6-3.2 6.1.2 2.4 1.8 4.1 4 4z"/></svg>`,
-  linux: `<svg viewBox="0 0 24 24">
-    <path d="M12 2.2c-3.6 0-6 3.4-6 8 0 4.6 2.3 8.4 6 9.6 3.7-1.2 6-5 6-9.6 0-4.6-2.4-8-6-8z" fill="#0a0a0a"/>
-    <ellipse cx="12" cy="13.5" rx="3.6" ry="5.4" fill="#ffffff"/>
-    <ellipse cx="9.4" cy="7.2" rx="1.7" ry="2" fill="#ffffff"/>
-    <ellipse cx="14.6" cy="7.2" rx="1.7" ry="2" fill="#ffffff"/>
-    <circle cx="9.6" cy="7.5" r=".6" fill="#0a0a0a"/>
-    <circle cx="14.4" cy="7.5" r=".6" fill="#0a0a0a"/>
-    <path d="M11 8.6h2l-1 1.8z" fill="#f5a623"/>
-    <path d="M8.4 20.6c1 .9 2.4 1.1 3.6.6.3-.1.3-.5 0-.7-1.1.3-2.3.2-3.3-.4-.4-.2-.7.2-.3.5z" fill="#f5a623"/>
-    <path d="M15.6 20.6c-1 .9-2.4 1.1-3.6.6-.3-.1-.3-.5 0-.7 1.1.3 2.3.2 3.3-.4.4-.2.7.2.3.5z" fill="#f5a623"/>
+  linux: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(0.24)">
+      <path d="M50 6 C39 6 31 15 31 25.5 C31 30.5 32.8 34.5 35.5 37.8 C26 44.5 18.5 56.5 16.5 68 C14 82 18 94 50 94 C82 94 86 82 83.5 68 C81.5 56.5 74 44.5 64.5 37.8 C67.2 34.5 69 30.5 69 25.5 C69 15 61 6 50 6 Z" fill="#0a0a0a"/>
+      <path d="M22 52 C12 57 6 68 8 79 C9.5 87 18 91 25.5 87.5 C30 85.5 31.5 78 29.5 69 C28 62 25.5 56 22 52Z" fill="#0a0a0a"/>
+      <path d="M78 52 C88 57 94 68 92 79 C90.5 87 82 91 74.5 87.5 C70 85.5 68.5 78 70.5 69 C72 62 74.5 56 78 52Z" fill="#0a0a0a"/>
+      <ellipse cx="83" cy="58" rx="7.5" ry="9" fill="#0a0a0a"/>
+      <ellipse cx="50" cy="62" rx="19" ry="27" fill="#f5f5f5"/>
+      <ellipse cx="41" cy="22" rx="7.2" ry="9" fill="#f2f2f2"/>
+      <ellipse cx="59" cy="22" rx="7.2" ry="9" fill="#f2f2f2"/>
+      <circle cx="42.3" cy="24.5" r="3.4" fill="#0a0a0a"/>
+      <circle cx="57.7" cy="24.5" r="3.4" fill="#0a0a0a"/>
+      <path d="M36 31.5 C36 27 42.5 24 50 24 C57.5 24 64 27 64 31.5 C64 37.5 58 41.5 50 41.5 C42 41.5 36 37.5 36 31.5Z" fill="#f5a623" stroke="#d1830f" stroke-width="1.3"/>
+      <path d="M38.5 32.5 Q50 38.5 61.5 32.5" fill="none" stroke="#d1830f" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M28 88 C22 89.5 18 94 21 97.5 C24 100.5 30 99 32.5 94.5 C34.5 91 32.5 87 28 88Z" fill="#f5a623" stroke="#d1830f" stroke-width="1"/>
+      <path d="M72 88 C78 89.5 82 94 79 97.5 C76 100.5 70 99 67.5 94.5 C65.5 91 67.5 87 72 88Z" fill="#f5a623" stroke="#d1830f" stroke-width="1"/>
+    </g>
   </svg>`,
 };
-
 // Ícone de "monitor/desktop", usado na página de erro específica de mobile
 const MONITOR_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`;
 
