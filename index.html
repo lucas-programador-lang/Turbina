@@ -15,6 +15,7 @@
   <div class="orb orb-3"></div>
   <div class="grain"></div>
 </div>
+<div class="vignette"></div>
 
 <nav class="top">
   <div class="wrap">
@@ -39,8 +40,18 @@
       <a href="#faq">Perguntas</a>
       <a class="nav-cta" href="https://github.com/" target="_blank" rel="noopener">Ver no GitHub</a>
     </div>
+    <button class="menu-toggle" aria-expanded="false" aria-label="Abrir menu" aria-controls="mobile-panel">
+      <span class="bar"></span>
+    </button>
   </div>
 </nav>
+
+<div class="mobile-panel" id="mobile-panel">
+  <a href="#como-funciona">Como funciona</a>
+  <a href="#scripts">Scripts</a>
+  <a href="#faq">Perguntas</a>
+  <a class="nav-cta" href="https://github.com/" target="_blank" rel="noopener">Ver no GitHub</a>
+</div>
 
 <main id="top">
 
@@ -123,6 +134,7 @@
 
       <!-- WINDOWS -->
       <article class="os-card os-win" data-tilt>
+        <span class="gradient-border" aria-hidden="true"></span>
         <div class="os-icon">
           <svg viewBox="0 0 24 24" width="52" height="52" fill="currentColor"><path d="M3 5.5L10.5 4.4V11.3H3V5.5Z"/><path d="M11.4 4.3L21 3V11.2H11.4V4.3Z"/><path d="M3 12.2H10.5V19.1L3 18V12.2Z"/><path d="M11.4 12.2H21V20.5L11.4 19.2V12.2Z"/></svg>
         </div>
@@ -140,6 +152,7 @@
 
       <!-- MAC -->
       <article class="os-card os-mac" data-tilt>
+        <span class="gradient-border" aria-hidden="true"></span>
         <div class="os-icon">
           <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M16.7 2c.1 1.1-.3 2.2-1 3-.7.9-1.9 1.6-3 1.5-.2-1.1.3-2.2 1-3 .8-.9 2.1-1.5 3-1.5zM20.8 17c-.6 1.3-.9 1.9-1.6 3-1 1.5-2.5 3.4-4.3 3.4-1.6 0-2-1-4.1-1-2.2 0-2.6 1-4.2 1-1.8 0-3.2-1.7-4.2-3.2C-.1 16.6-.6 11 1.4 8c1.3-1.9 3.3-3 5.3-3 1.7 0 3 .9 4 .9.9 0 2.5-1.1 4.3-1 .7 0 2.7.3 4 2-2.2 1.3-3.4 3.6-3.2 6.1.2 2.4 1.8 4.1 4 4z"/></svg>
         </div>
@@ -157,8 +170,14 @@
 
       <!-- LINUX -->
       <article class="os-card os-linux" data-tilt>
+        <span class="gradient-border" aria-hidden="true"></span>
         <div class="os-icon">
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M12 2c1.7 0 3 2 3 4.5 0 1-.3 2-.8 2.8.6.4 1.3 1.2 1.9 2.3 1 1.8 1.4 3.9.9 5.4-.3.9-1 1.6-2 1.9.1.5-.1 1.1-.7 1.4-1 .5-3 .5-4.3 0-.6-.3-.8-.9-.7-1.4-1-.3-1.7-1-2-1.9-.5-1.5-.1-3.6.9-5.4.6-1.1 1.3-1.9 1.9-2.3-.5-.8-.8-1.8-.8-2.8C9 4 10.3 2 12 2z"/></svg>
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="12" cy="6.2" rx="3.6" ry="3.8"/>
+            <path d="M8.6 9.2c-2.1 1.3-3.4 4-3.4 7 0 3.6 3 5.6 6.8 5.6s6.8-2 6.8-5.6c0-3-1.3-5.7-3.4-7-.9 1-2.1 1.6-3.4 1.6s-2.5-.6-3.4-1.6z"/>
+            <ellipse cx="8.6" cy="20.6" rx="1.7" ry=".9"/>
+            <ellipse cx="15.4" cy="20.6" rx="1.7" ry=".9"/>
+          </svg>
         </div>
         <h3>Linux</h3>
         <span class="os-tag">turbina-linux.sh · Distros com systemd</span>
@@ -187,15 +206,7 @@
         <span></span><span></span><span></span>
         <span class="path">~/turbina — zsh</span>
       </div>
-      <div class="terminal-body">
-        <div><span class="prompt">$</span> ./turbina-linux.sh</div>
-        <div class="muted-l">==========================================================</div>
-        <div class="muted-l">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TURBINA - OTIMIZADOR DE LINUX</div>
-        <div class="muted-l">==========================================================</div>
-        <div>&nbsp;5&nbsp; - Ajustar swappiness (uso de RAM x swap)</div>
-        <div>Valor atual do swappiness: 60</div>
-        <div class="muted-l">Deseja ajustar o swappiness para 10? (s/N): <span class="cursor"></span></div>
-      </div>
+      <div class="terminal-body" data-lines='[{"prompt":"$ ","text":"./turbina-linux.sh"},{"prompt":"","text":"==========================================================","cls":"muted-l"},{"prompt":"","text":"     TURBINA - OTIMIZADOR DE LINUX","cls":"muted-l"},{"prompt":"","text":"==========================================================","cls":"muted-l"},{"prompt":"","text":" 5  - Ajustar swappiness (uso de RAM x swap)"},{"prompt":"","text":"Valor atual do swappiness: 60"},{"prompt":"","text":"Deseja ajustar o swappiness para 10? (s/N):","cls":"muted-l"}]'></div>
     </div>
   </section>
 
@@ -237,6 +248,12 @@
     <span class="footer-note">licença MIT</span>
   </div>
 </footer>
+
+<button class="back-to-top" aria-label="Voltar ao topo">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
 
 <script src="assets/js/script.js"></script>
 </body>
