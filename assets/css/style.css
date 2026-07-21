@@ -760,6 +760,77 @@ summary:focus-visible,
   cursor: not-allowed;
 }
 
+/* ---------- Toast de download (dispara UMA vez: 45s de permanência OU exit-intent) ---------- */
+.os-toast {
+  position: fixed;
+  left: 26px;
+  bottom: 26px;
+  z-index: 46;
+  max-width: 320px;
+  background: rgba(18,21,28,0.96);
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  padding: 18px 18px 18px 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transform: translateY(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(.2,.8,.2,1);
+}
+.os-toast.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.os-toast .os-toast-icon {
+  width: 34px; height: 34px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: rgba(79,209,255,0.1);
+  border: 1px solid rgba(79,209,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cyan);
+}
+.os-toast .os-toast-icon svg { width: 17px; height: 17px; }
+.os-toast-body { flex: 1; min-width: 0; }
+.os-toast p {
+  margin: 0 0 10px;
+  font-size: 0.86rem;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.os-toast p strong { color: var(--cyan); font-weight: 600; }
+.os-toast a.os-toast-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #06080c;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 9px;
+  transition: transform 0.2s ease;
+}
+.os-toast a.os-toast-link:hover { transform: translateY(-1px); }
+.os-toast button.os-toast-close {
+  background: none;
+  border: none;
+  color: var(--muted-2);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 2px;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+.os-toast button.os-toast-close:hover { color: var(--ink); }
+
+@media (max-width: 560px) {
+  .os-toast { left: 14px; right: 14px; bottom: 90px; max-width: none; }
+}
+
 /* ---------- Footer ---------- */
 footer {
   border-top: 1px solid var(--line);
