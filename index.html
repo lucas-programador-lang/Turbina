@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turbina — Otimização real para Windows, macOS e Linux</title>
+<meta name="description" content="Scripts de otimização abertos e gratuitos para deixar seu computador mais rápido. Windows, macOS e Linux, com menu interativo e explicação de cada etapa.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="bg-scene">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grain"></div>
+</div>
+
+<nav class="top">
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <svg class="blade-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="3" fill="#4fd1ff"/>
+        <ellipse cx="16" cy="8" rx="4" ry="7" fill="url(#g1)" transform="rotate(0 16 16)"/>
+        <ellipse cx="16" cy="8" rx="4" ry="7" fill="url(#g1)" transform="rotate(120 16 16)"/>
+        <ellipse cx="16" cy="8" rx="4" ry="7" fill="url(#g1)" transform="rotate(240 16 16)"/>
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+            <stop stop-color="#4fd1ff"/>
+            <stop offset="1" stop-color="#8c6dff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      Turbina
+    </a>
+    <div class="nav-links">
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#scripts">Scripts</a>
+      <a href="#faq">Perguntas</a>
+      <a class="nav-cta" href="https://github.com/" target="_blank" rel="noopener">Ver no GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="dot"></span> CÓDIGO ABERTO · SEM INSTALAÇÃO</span>
+      <h1 class="headline">Sua máquina<br><span class="accent">girando</span> na velocidade certa.</h1>
+      <p class="lede">Três scripts, um por sistema operacional, feitos para limpar, ajustar e destravar o desempenho do seu computador — com menu interativo e explicação de cada etapa, sem letra miúda.</p>
+      <div class="hero-actions">
+        <a href="#scripts" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 8l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Baixar script
+        </a>
+        <a href="#como-funciona" class="btn btn-ghost">Ver como funciona</a>
+      </div>
+      <div class="trust-row">
+        <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="1.5"/></svg> 100% código aberto</span>
+        <span><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Sem instalador</span>
+        <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Ponto de restauração incluso</span>
+      </div>
+    </div>
+
+    <div class="turbine-stage" aria-hidden="true">
+      <div class="turbine-ring"></div>
+      <div class="turbine-ring r2"></div>
+      <div class="turbine-core">
+        <div class="blade-wrap">
+          <div class="blade"></div>
+          <div class="blade"></div>
+          <div class="blade"></div>
+          <div class="blade"></div>
+          <div class="blade"></div>
+        </div>
+        <div class="turbine-hub"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="steps wrap" id="como-funciona">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> PROCESSO</span>
+      <h2 class="section-title">Quatro passos, do download ao ganho de desempenho.</h2>
+      <p>Sem conta, sem cadastro, sem app rodando em segundo plano depois. Você baixa, executa, escolhe o que quer aplicar, e pronto.</p>
+    </div>
+    <div class="step-grid">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <h3>Baixe o script do seu sistema</h3>
+        <p>Um arquivo único: <code>.bat</code> para Windows, <code>.sh</code> para macOS ou Linux.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <h3>Execute com permissão de administrador</h3>
+        <p>No Windows, clique com o botão direito. No Mac/Linux, use <code>chmod +x</code> e rode no Terminal.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <h3>Escolha no menu interativo</h3>
+        <p>Cada etapa é opcional e explicada na hora — você decide o que aplicar, nada roda escondido.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">04</span>
+        <h3>Reinicie e sinta a diferença</h3>
+        <p>Um log é salvo na mesma pasta, mostrando exatamente o que foi alterado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCRIPTS / OS CARDS -->
+  <section class="systems wrap" id="scripts">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> ESCOLHA SEU SISTEMA</span>
+      <h2 class="section-title">Um script dedicado para cada plataforma.</h2>
+      <p>Mesmo espírito, comandos nativos de cada sistema — nada de tradução forçada de um SO para outro.</p>
+    </div>
+
+    <div class="os-grid">
+
+      <!-- WINDOWS -->
+      <article class="os-card os-win" data-tilt>
+        <div class="os-icon">
+          <svg viewBox="0 0 24 24" width="52" height="52" fill="currentColor"><path d="M3 5.5L10.5 4.4V11.3H3V5.5Z"/><path d="M11.4 4.3L21 3V11.2H11.4V4.3Z"/><path d="M3 12.2H10.5V19.1L3 18V12.2Z"/><path d="M11.4 12.2H21V20.5L11.4 19.2V12.2Z"/></svg>
+        </div>
+        <h3>Windows</h3>
+        <span class="os-tag">turbina-windows.bat · Windows 10 / 11</span>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Menu com 28 otimizações, cada uma opcional</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Detecta SSD ou HD e ajusta sozinho</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Turbo de internet, DNS, limpeza e reparo do sistema</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Cria ponto de restauração antes de mexer em qualquer coisa</li>
+        </ul>
+        <a href="downloads/turbina-windows.bat" download class="btn os-download">Baixar turbina-windows.bat</a>
+        <div class="os-meta">chmod não necessário · execute como Administrador</div>
+      </article>
+
+      <!-- MAC -->
+      <article class="os-card os-mac" data-tilt>
+        <div class="os-icon">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M16.7 2c.1 1.1-.3 2.2-1 3-.7.9-1.9 1.6-3 1.5-.2-1.1.3-2.2 1-3 .8-.9 2.1-1.5 3-1.5zM20.8 17c-.6 1.3-.9 1.9-1.6 3-1 1.5-2.5 3.4-4.3 3.4-1.6 0-2-1-4.1-1-2.2 0-2.6 1-4.2 1-1.8 0-3.2-1.7-4.2-3.2C-.1 16.6-.6 11 1.4 8c1.3-1.9 3.3-3 5.3-3 1.7 0 3 .9 4 .9.9 0 2.5-1.1 4.3-1 .7 0 2.7.3 4 2-2.2 1.3-3.4 3.6-3.2 6.1.2 2.4 1.8 4.1 4 4z"/></svg>
+        </div>
+        <h3>macOS</h3>
+        <span class="os-tag">turbina-mac.sh · Intel & Apple Silicon</span>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Limpa cache do sistema e de apps</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Verifica disco e libera memória RAM inativa</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Reinicia Finder e Dock sem precisar deslogar</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Atalho direto para os itens de login</li>
+        </ul>
+        <a href="downloads/turbina-mac.sh" download class="btn os-download">Baixar turbina-mac.sh</a>
+        <div class="os-meta">chmod +x turbina-mac.sh</div>
+      </article>
+
+      <!-- LINUX -->
+      <article class="os-card os-linux" data-tilt>
+        <div class="os-icon">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor"><path d="M12 2c1.7 0 3 2 3 4.5 0 1-.3 2-.8 2.8.6.4 1.3 1.2 1.9 2.3 1 1.8 1.4 3.9.9 5.4-.3.9-1 1.6-2 1.9.1.5-.1 1.1-.7 1.4-1 .5-3 .5-4.3 0-.6-.3-.8-.9-.7-1.4-1-.3-1.7-1-2-1.9-.5-1.5-.1-3.6.9-5.4.6-1.1 1.3-1.9 1.9-2.3-.5-.8-.8-1.8-.8-2.8C9 4 10.3 2 12 2z"/></svg>
+        </div>
+        <h3>Linux</h3>
+        <span class="os-tag">turbina-linux.sh · Distros com systemd</span>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Detecta apt, dnf, pacman ou zypper sozinho</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Roda TRIM no SSD e ajusta o swappiness</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Lista serviços ativos na inicialização</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Reduz logs antigos do journalctl</li>
+        </ul>
+        <a href="downloads/turbina-linux.sh" download class="btn os-download">Baixar turbina-linux.sh</a>
+        <div class="os-meta">chmod +x turbina-linux.sh</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TERMINAL PREVIEW -->
+  <section class="terminal-section wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> PRÉVIA</span>
+      <h2 class="section-title">Nada de caixa preta. Você vê cada comando.</h2>
+      <p>O menu explica o que vai acontecer antes de você confirmar — em português, sem jargão técnico escondido.</p>
+    </div>
+    <div class="terminal-window">
+      <div class="terminal-bar">
+        <span></span><span></span><span></span>
+        <span class="path">~/turbina — zsh</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="prompt">$</span> ./turbina-linux.sh</div>
+        <div class="muted-l">==========================================================</div>
+        <div class="muted-l">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TURBINA - OTIMIZADOR DE LINUX</div>
+        <div class="muted-l">==========================================================</div>
+        <div>&nbsp;5&nbsp; - Ajustar swappiness (uso de RAM x swap)</div>
+        <div>Valor atual do swappiness: 60</div>
+        <div class="muted-l">Deseja ajustar o swappiness para 10? (s/N): <span class="cursor"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> DÚVIDAS</span>
+      <h2 class="section-title">Perguntas frequentes</h2>
+    </div>
+
+    <details class="faq-item" open>
+      <summary>Esses scripts são seguros?</summary>
+      <p>Sim. Todo comando é de código aberto, comentado e usa apenas ferramentas nativas do próprio sistema operacional (Registro do Windows, PowerShell, systemd, etc). Nada é baixado de servidores externos, e ações mais sensíveis (como remover apps ou desativar hibernação) sempre pedem confirmação antes de rodar.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Preciso desinstalar algo depois?</summary>
+      <p>Não. Não existe instalador, serviço em segundo plano ou processo residente. É um único arquivo de script que roda e termina — você pode até apagar o arquivo depois de usar.</p>
+    </details>
+    <details class="faq-item">
+      <summary>E se alguma mudança não me agradar?</summary>
+      <p>No Windows, o script cria um ponto de restauração do sistema antes de qualquer alteração — é só reverter por lá. Nos scripts de Mac e Linux, cada ação é isolada e reversível manualmente (o próprio script explica como desfazer as mais sensíveis, como o swappiness).</p>
+    </details>
+    <details class="faq-item">
+      <summary>Funciona em qualquer versão do sistema?</summary>
+      <p>O script de Windows foi testado em Windows 10 e 11. O de macOS funciona em versões recentes (Intel e Apple Silicon). O de Linux funciona em qualquer distribuição baseada em systemd — Ubuntu, Debian, Fedora, Arch, Mint, Pop!_OS, entre outras.</p>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <span class="footer-note">turbina · scripts de otimização de código aberto</span>
+    <div class="footer-links">
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#faq">Perguntas</a>
+    </div>
+    <span class="footer-note">licença MIT</span>
+  </div>
+</footer>
+
+<script src="assets/js/script.js"></script>
+</body>
+</html>
