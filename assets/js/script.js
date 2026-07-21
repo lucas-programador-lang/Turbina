@@ -294,9 +294,18 @@
      em segundo plano no momento do gatilho. */
   if (detectedOS) {
     const STORAGE_KEY = 'turbina-toast-dismissed';
+    const SITE_URL = 'https://turbina-6fh.pages.dev';
     const labels = { win: 'Windows', mac: 'macOS', linux: 'Linux' };
     const targetCard = document.querySelector(`.os-${detectedOS}`);
     const targetBtn = targetCard ? targetCard.querySelector('.os-download') : null;
+
+    // garante que o card tenha um id estável para a âncora, mesmo se o HTML não trouxer um
+    if (targetCard && !targetCard.id) {
+      targetCard.id = `os-${detectedOS}`;
+    }
+    const targetHref = targetCard
+      ? `${SITE_URL}/#${targetCard.id}`
+      : `${SITE_URL}/#scripts`; // fallback: seção geral, caso o card não seja encontrado
 
     let alreadyHandled = localStorage.getItem(STORAGE_KEY) === '1';
     let toastEl = null;
@@ -326,15 +335,25 @@
         </span>
         <span class="os-toast-body">
           <p>Detectamos que você está no <strong>${labels[detectedOS]}</strong>. Que tal baixar o Turbina para o seu sistema?</p>
-          <a class="os-toast-link" href="#${detectedOS}">Baixar para ${labels[detectedOS]}</a>
+          <a class="os-toast-link" href="${targetHref}">Baixar para ${labels[detectedOS]}</a>
         </span>
         <button type="button" class="os-toast-close" aria-label="Fechar aviso">&times;</button>
       `;
       document.body.appendChild(toast);
 
-      toast.querySelector('.os-toast-link').addEventListener('click', () => {
+      toast.querySelector('.os-toast-link').addEventListener('click', (e) => {
         persistDismissed();
         hideToast();
+        // se já estamos na mesma página, o hash pode não mudar (ou já ser o mesmo),
+        // e nesse caso o navegador não rola sozinho — então garantimos na mão.
+        if (window.location.origin + window.location.pathname === SITE_URL + '/' ||
+            window.location.href.startsWith(SITE_URL)) {
+          if (targetCard) {
+            e.preventDefault();
+            history.pushState(null, '', targetHref.replace(SITE_URL, ''));
+            targetCard.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+          }
+        }
       });
       toast.querySelector('.os-toast-close').addEventListener('click', () => {
         persistDismissed();
