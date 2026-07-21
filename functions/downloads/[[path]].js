@@ -30,6 +30,24 @@ const OS_LABEL = {
   linux: 'Linux',
 };
 
+// Mesmos ícones usados nos cards do site principal (index.html), pra manter
+// a identidade visual consistente também na página de erro.
+const OS_ICON = {
+  win: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5L10.5 4.4V11.3H3V5.5Z"/><path d="M11.4 4.3L21 3V11.2H11.4V4.3Z"/><path d="M3 12.2H10.5V19.1L3 18V12.2Z"/><path d="M11.4 12.2H21V20.5L11.4 19.2V12.2Z"/></svg>`,
+  mac: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 2c.1 1.1-.3 2.2-1 3-.7.9-1.9 1.6-3 1.5-.2-1.1.3-2.2 1-3 .8-.9 2.1-1.5 3-1.5zM20.8 17c-.6 1.3-.9 1.9-1.6 3-1 1.5-2.5 3.4-4.3 3.4-1.6 0-2-1-4.1-1-2.2 0-2.6 1-4.2 1-1.8 0-3.2-1.7-4.2-3.2C-.1 16.6-.6 11 1.4 8c1.3-1.9 3.3-3 5.3-3 1.7 0 3 .9 4 .9.9 0 2.5-1.1 4.3-1 .7 0 2.7.3 4 2-2.2 1.3-3.4 3.6-3.2 6.1.2 2.4 1.8 4.1 4 4z"/></svg>`,
+  linux: `<svg viewBox="0 0 24 24">
+    <path d="M12 2.2c-3.6 0-6 3.4-6 8 0 4.6 2.3 8.4 6 9.6 3.7-1.2 6-5 6-9.6 0-4.6-2.4-8-6-8z" fill="#0a0a0a"/>
+    <ellipse cx="12" cy="13.5" rx="3.6" ry="5.4" fill="#ffffff"/>
+    <ellipse cx="9.4" cy="7.2" rx="1.7" ry="2" fill="#ffffff"/>
+    <ellipse cx="14.6" cy="7.2" rx="1.7" ry="2" fill="#ffffff"/>
+    <circle cx="9.6" cy="7.5" r=".6" fill="#0a0a0a"/>
+    <circle cx="14.4" cy="7.5" r=".6" fill="#0a0a0a"/>
+    <path d="M11 8.6h2l-1 1.8z" fill="#f5a623"/>
+    <path d="M8.4 20.6c1 .9 2.4 1.1 3.6.6.3-.1.3-.5 0-.7-1.1.3-2.3.2-3.3-.4-.4-.2-.7.2-.3.5z" fill="#f5a623"/>
+    <path d="M15.6 20.6c-1 .9-2.4 1.1-3.6.6-.3-.1-.3-.5 0-.7 1.1.3 2.3.2 3.3-.4.4-.2.7.2.3.5z" fill="#f5a623"/>
+  </svg>`,
+};
+
 function detectOS(userAgent) {
   const ua = (userAgent || '').toLowerCase();
   if (ua.includes('mac')) return 'mac';
@@ -41,6 +59,8 @@ function detectOS(userAgent) {
 function forbiddenResponse(requiredOS, detectedOS) {
   const requiredLabel = OS_LABEL[requiredOS] || 'outro sistema';
   const detectedLabel = detectedOS ? OS_LABEL[detectedOS] : 'não identificado';
+  const requiredIcon = OS_ICON[requiredOS] || '';
+  const detectedIcon = detectedOS ? OS_ICON[detectedOS] : '';
 
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -61,6 +81,9 @@ function forbiddenResponse(requiredOS, detectedOS) {
     --muted-2: #5c6478;
     --cyan: #4fd1ff;
     --violet: #8c6dff;
+    --win: #4cc2ff;
+    --mac: #e8e8ed;
+    --linux: #f5b700;
     --line: rgba(237, 239, 244, 0.08);
     --line-2: rgba(237, 239, 244, 0.14);
   }
@@ -130,10 +153,11 @@ function forbiddenResponse(requiredOS, detectedOS) {
     border: 1px solid rgba(140,109,255,0.28);
     box-shadow: 0 0 40px rgba(140,109,255,0.15);
   }
-  .icon-ring svg {
-    width: 28px; height: 28px;
-    color: var(--violet);
-  }
+  .icon-ring svg { width: 30px; height: 30px; }
+  .icon-ring.icon-win svg { color: var(--win); }
+  .icon-ring.icon-mac svg { color: var(--mac); }
+  .icon-ring.icon-linux { background: rgba(245,183,0,0.08); border-color: rgba(245,183,0,0.28); box-shadow: 0 0 40px rgba(245,183,0,0.12); }
+  .icon-ring.icon-linux svg { width: 36px; height: 36px; }
 
   .eyebrow {
     display: inline-flex;
@@ -184,15 +208,21 @@ function forbiddenResponse(requiredOS, detectedOS) {
     flex-wrap: wrap;
   }
   .meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.74rem;
     color: var(--muted-2);
     border: 1px solid var(--line-2);
     background: rgba(237,239,244,0.03);
-    padding: 6px 12px;
+    padding: 6px 12px 6px 8px;
     border-radius: 100px;
   }
   .meta-pill strong { color: var(--ink); font-weight: 500; }
+  .meta-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .meta-pill.pill-win svg { color: var(--win); }
+  .meta-pill.pill-mac svg { color: var(--mac); }
 
   .btn {
     display: inline-flex;
@@ -230,11 +260,8 @@ function forbiddenResponse(requiredOS, detectedOS) {
   <div class="vignette"></div>
 
   <main class="card">
-    <div class="icon-ring">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="4" y="10" width="16" height="10" rx="2"></rect>
-        <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
-      </svg>
+    <div class="icon-ring icon-${requiredOS}">
+      ${requiredIcon}
     </div>
 
     <span class="eyebrow"><span class="dot"></span> ARQUIVO INCOMPATÍVEL</span>
@@ -243,8 +270,8 @@ function forbiddenResponse(requiredOS, detectedOS) {
     <p class="lede">O arquivo que você tentou baixar foi feito para outro sistema operacional e não vai funcionar no seu.</p>
 
     <div class="meta-row">
-      <span class="meta-pill">arquivo: <strong>${requiredLabel}</strong></span>
-      <span class="meta-pill">detectado: <strong>${detectedLabel}</strong></span>
+      <span class="meta-pill pill-${requiredOS}">${requiredIcon} arquivo: <strong>${requiredLabel}</strong></span>
+      ${detectedOS ? `<span class="meta-pill pill-${detectedOS}">${detectedIcon} detectado: <strong>${detectedLabel}</strong></span>` : `<span class="meta-pill">detectado: <strong>${detectedLabel}</strong></span>`}
     </div>
 
     <a class="btn" href="/#scripts">
