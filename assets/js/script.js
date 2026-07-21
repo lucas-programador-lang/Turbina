@@ -1,62 +1,268 @@
-// TURBINA — interações leves: tilt 3D nos cards de sistema
-(function () {
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const cards = document.querySelectorAll('[data-tilt]');
+/* ==========================================================
+   TURBINA — Interações
+   Depende do HTML descrito no chat (menu-toggle, mobile-panel,
+   back-to-top, vignette, terminal-body com data-lines opcional)
+   ========================================================== */
 
-  if (prefersReduced) return;
+(() => {
+  'use strict';
 
-  cards.forEach((card) => {
-    let bounds;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-    const rotateToMouse = (e) => {
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      const leftX = mouseX - bounds.x;
-      const topY = mouseY - bounds.y;
-      const center = { x: leftX - bounds.width / 2, y: topY - bounds.height / 2 };
+  /* ---------- Navbar retrátil ---------- */
+  const nav = document.querySelector('nav.top');
+  if (nav) {
+    let ticking = false;
+    const updateNav = () => {
+      nav.classList.toggle('is-scrolled', window.scrollY > 40);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateNav);
+        ticking = true;
+      }
+    }, { passive: true });
+    updateNav();
+  }
 
-      card.style.transform = `
-        perspective(900px)
-        rotateX(${(-center.y / bounds.height) * 10}deg)
-        rotateY(${(center.x / bounds.width) * 12}deg)
-        scale3d(1.015, 1.015, 1.015)
-      `;
-      card.style.setProperty('--mx', `${(leftX / bounds.width) * 100}%`);
-      card.style.setProperty('--my', `${(topY / bounds.height) * 100}%`);
+  /* ---------- Menu mobile ---------- */
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mobilePanel = document.querySelector('.mobile-panel');
+  if (menuToggle && mobilePanel) {
+    const closeMenu = () => {
+      menuToggle.setAttribute('aria-expanded', 'false');
+      mobilePanel.classList.remove('is-open');
+      document.body.classList.remove('menu-open');
+    };
+    const openMenu = () => {
+      menuToggle.setAttribute('aria-expanded', 'true');
+      mobilePanel.classList.add('is-open');
+      document.body.classList.add('menu-open');
+    };
+    menuToggle.addEventListener('click', () => {
+      const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+      isOpen ? closeMenu() : openMenu();
+    });
+    mobilePanel.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+    // fecha o menu se a viewport crescer além do breakpoint mobile
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 980) closeMenu();
+    });
+  }
+
+  /* ---------- Parallax das orbs (mouse) ---------- */
+  const bgScene = document.querySelector('.bg-scene');
+  if (bgScene && hasFinePointer && !reduceMotion) {
+    let rafId = null;
+    window.addEventListener('mousemove', (e) => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        const px = (e.clientX / window.innerWidth - 0.5) * 40; // amplitude limitada
+        const py = (e.clientY / window.innerHeight - 0.5) * 40;
+        bgScene.style.setProperty('--px', `${px}px`);
+        bgScene.style.setProperty('--py', `${py}px`);
+        rafId = null;
+      });
+    }, { passive: true });
+  }
+
+  /* ---------- Botão voltar ao topo ---------- */
+  const backToTop = document.querySelector('.back-to-top');
+  if (backToTop) {
+    const toggleVisibility = () => {
+      backToTop.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.6);
+    };
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+    toggleVisibility();
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ---------- Terminal: digitação real (dispara uma vez, ao entrar em viewport) ---------- */
+  const terminalBody = document.querySelector('.terminal-body');
+  if (terminalBody) {
+    const defaultLines = [
+      { prompt: '$ ', text: 'turbina install --target=all', cls: '' },
+      { prompt: '', text: 'Resolvendo dependências...', cls: 'muted-l' },
+      { prompt: '', text: 'Pronto em 1.8s ✓', cls: '' },
+    ];
+    let lines = defaultLines;
+    if (terminalBody.dataset.lines) {
+      try { lines = JSON.parse(terminalBody.dataset.lines); } catch (_) { lines = defaultLines; }
+    }
+
+    const renderStatic = () => {
+      terminalBody.innerHTML = '';
+      lines.forEach(({ prompt, text, cls }) => {
+        const lineEl = document.createElement('div');
+        if (prompt) {
+          const p = document.createElement('span');
+          p.className = 'prompt';
+          p.textContent = prompt;
+          lineEl.appendChild(p);
+        }
+        const t = document.createElement('span');
+        if (cls) t.className = cls;
+        t.textContent = text;
+        lineEl.appendChild(t);
+        terminalBody.appendChild(lineEl);
+      });
     };
 
-    card.addEventListener('mouseenter', () => {
-      bounds = card.getBoundingClientRect();
-      card.style.transition = 'none';
-    });
+    const typeLines = () => {
+      terminalBody.innerHTML = '';
+      let lineIndex = 0;
 
-    card.addEventListener('mousemove', rotateToMouse);
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transition = 'transform 0.5s cubic-bezier(.2,.8,.2,1)';
-      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
-    });
-  });
-
-  // Reveal suave das seções ao rolar a página
-  const revealTargets = document.querySelectorAll('.step-card, .os-card, .terminal-window, .faq-item');
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = entry.target.style.transform.replace('translateY(24px)', 'translateY(0)');
-          io.unobserve(entry.target);
+      const typeLine = () => {
+        if (lineIndex >= lines.length) {
+          const cursor = document.createElement('span');
+          cursor.className = 'cursor';
+          terminalBody.appendChild(cursor);
+          return;
         }
-      });
-    },
-    { threshold: 0.12 }
-  );
+        const { prompt, text, cls } = lines[lineIndex];
+        const lineEl = document.createElement('div');
+        if (prompt) {
+          const promptEl = document.createElement('span');
+          promptEl.className = 'prompt';
+          promptEl.textContent = prompt;
+          lineEl.appendChild(promptEl);
+        }
+        const textEl = document.createElement('span');
+        if (cls) textEl.className = cls;
+        lineEl.appendChild(textEl);
+        terminalBody.appendChild(lineEl);
 
-  revealTargets.forEach((el) => {
-    el.style.opacity = '0';
-    el.style.transform = (el.style.transform || '') + ' translateY(24px)';
-    el.style.transition = 'opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.8,.2,1)';
-    io.observe(el);
-  });
+        let charIndex = 0;
+        const typeChar = () => {
+          if (charIndex < text.length) {
+            textEl.textContent += text[charIndex];
+            charIndex += 1;
+            setTimeout(typeChar, 22 + Math.random() * 28);
+          } else {
+            lineIndex += 1;
+            setTimeout(typeLine, 260);
+          }
+        };
+        typeChar();
+      };
+      typeLine();
+    };
+
+    if (reduceMotion) {
+      renderStatic();
+    } else {
+      let played = false;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !played) {
+            played = true;
+            typeLines();
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.4 });
+      observer.observe(terminalBody);
+    }
+  }
+
+  /* ---------- Tilt 3D nos cards de sistema ---------- */
+  const tiltCards = document.querySelectorAll('[data-tilt]');
+  if (!reduceMotion && tiltCards.length) {
+    tiltCards.forEach((card) => {
+      let bounds;
+      let rafId = null;
+      let pendingEvent = null;
+
+      const applyTilt = () => {
+        const e = pendingEvent;
+        rafId = null;
+        if (!e) return;
+        const leftX = e.clientX - bounds.x;
+        const topY = e.clientY - bounds.y;
+        const center = { x: leftX - bounds.width / 2, y: topY - bounds.height / 2 };
+        card.style.transform = `
+          perspective(900px)
+          rotateX(${(-center.y / bounds.height) * 10}deg)
+          rotateY(${(center.x / bounds.width) * 12}deg)
+          scale3d(1.015, 1.015, 1.015)
+        `;
+        card.style.setProperty('--mx', `${(leftX / bounds.width) * 100}%`);
+        card.style.setProperty('--my', `${(topY / bounds.height) * 100}%`);
+      };
+
+      const rotateToMouse = (e) => {
+        pendingEvent = e;
+        if (!rafId) rafId = requestAnimationFrame(applyTilt);
+      };
+
+      card.addEventListener('mouseenter', () => {
+        bounds = card.getBoundingClientRect();
+        card.style.transition = 'none';
+      });
+      card.addEventListener('mousemove', rotateToMouse);
+      card.addEventListener('mouseleave', () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+        pendingEvent = null;
+        card.style.transition = 'transform 0.5s cubic-bezier(.2,.8,.2,1)';
+        card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+      });
+    });
+  }
+
+  /* ---------- Reveal suave das seções ao rolar
+     (classe CSS, não transform inline — não colide com o tilt) ---------- */
+  const revealTargets = document.querySelectorAll('.step-card, .os-card, .terminal-window, .faq-item');
+  if (!reduceMotion && revealTargets.length) {
+    const revealIo = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            revealIo.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    revealTargets.forEach((el) => {
+      el.classList.add('reveal-pending');
+      revealIo.observe(el);
+    });
+  }
+  /* ---------- Detecção de sistema operacional (recomendação, não bloqueio) ---------- */
+  const detectOS = () => {
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const platform = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '').toLowerCase();
+    const combined = `${platform} ${ua}`;
+
+    // celular/tablet: não faz sentido recomendar um instalador de desktop
+    if (/android|iphone|ipad|ipod|mobile/.test(combined)) return null;
+
+    if (combined.includes('mac')) return 'mac';
+    if (combined.includes('win')) return 'win';
+    if (combined.includes('linux') || combined.includes('x11') || combined.includes('ubuntu')) return 'linux';
+    return null;
+  };
+
+  const detectedOS = detectOS();
+  if (detectedOS) {
+    const detectedCard = document.querySelector(`.os-${detectedOS}`);
+    if (detectedCard) {
+      detectedCard.classList.add('is-detected');
+      const badge = document.createElement('span');
+      badge.className = 'os-detected-badge';
+      badge.textContent = 'Recomendado pra você';
+      detectedCard.prepend(badge);
+    }
+  }
 })();
