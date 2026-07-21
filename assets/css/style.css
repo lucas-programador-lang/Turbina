@@ -515,6 +515,7 @@ h2.section-title {
   will-change: transform;
   position: relative;
   overflow: hidden;
+  scroll-margin-top: 100px; /* compensa a nav sticky ao chegar via âncora (#os-win etc.) */
 }
 .os-card::before {
   content: '';
