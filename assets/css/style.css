@@ -104,6 +104,21 @@ body.menu-open { overflow: hidden; }
   transform: translate3d(calc(var(--px) * 0.3), calc(var(--py) * -0.5), 0);
 }
 
+/* Viga de luz atrás do hero — estática (sem custo de animação extra),
+   reforça a profundidade sem competir com as orbs que já se movem. */
+.bg-scene::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 900px;
+  height: 700px;
+  transform: translateX(-50%);
+  background: conic-gradient(from 200deg at 50% 0%, transparent 0deg, rgba(79,209,255,0.08) 40deg, transparent 90deg, rgba(140,109,255,0.06) 140deg, transparent 200deg);
+  filter: blur(40px);
+  opacity: 0.8;
+}
+
 .grain {
   position: absolute;
   inset: 0;
@@ -858,6 +873,14 @@ footer {
   .nav-links { display: none; }
 }
 
+/* Tablet (ex: iPad em pé, ~768-980px): o breakpoint acima derruba os
+   cards de OS pra 1 coluna, o que desperdiça a largura disponível nessa
+   faixa. Aqui eles voltam pra 2 colunas — o 3º card fica sozinho na
+   linha de baixo, o que é aceitável e ainda melhor que empilhar tudo. */
+@media (min-width: 661px) and (max-width: 980px) {
+  .os-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 560px) {
   .wrap { padding: 0 20px; }
   h1.headline { font-size: 2.1rem; }
@@ -866,4 +889,15 @@ footer {
   .trust-row { flex-direction: column; gap: 10px; }
   .turbine-core { transform: scale(0.8); }
   .back-to-top { right: 18px; bottom: 18px; width: 44px; height: 44px; }
+}
+
+/* Desktop grande / wide (>=1440px): o .wrap continua centralizado com
+   largura fixa de propósito — conteúdo esticado até a borda em telas
+   ultrawide prejudica leitura. O que ganha escala aqui é só o elemento
+   visual (turbina), que senão fica pequeno demais sobrando espaço vazio
+   ao redor num monitor grande. */
+@media (min-width: 1440px) {
+  .turbine-stage { height: 520px; }
+  .turbine-core { transform: scale(1.12); }
+  .os-grid { gap: 32px; }
 }
