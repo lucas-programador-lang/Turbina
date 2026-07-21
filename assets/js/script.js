@@ -255,6 +255,18 @@
   };
 
   const detectedOS = detectOS();
+
+  const lockCard = (card) => {
+    card.classList.add('is-locked');
+    const btn = card.querySelector('.os-download');
+    if (!btn) return;
+    btn.setAttribute('aria-disabled', 'true');
+    btn.textContent = 'Indisponível para o seu sistema';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+    });
+  };
+
   if (detectedOS) {
     const detectedCard = document.querySelector(`.os-${detectedOS}`);
     if (detectedCard) {
@@ -264,5 +276,11 @@
       badge.textContent = 'Recomendado pra você';
       detectedCard.prepend(badge);
     }
+    ['win', 'mac', 'linux']
+      .filter((os) => os !== detectedOS)
+      .forEach((os) => {
+        const card = document.querySelector(`.os-${os}`);
+        if (card) lockCard(card);
+      });
   }
 })();
