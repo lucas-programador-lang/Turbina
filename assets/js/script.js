@@ -88,8 +88,15 @@
 
   /* ---------- Terminal genérico: digitação real (dispara uma vez, ao entrar em viewport) ----------
      Roda em QUALQUER .terminal-body que ainda não tenha sido tratado pelo
-     tutorial.js (que marca cada terminal com data-typed="1" depois de tratá-lo). */
+     tutorial.js (que marca cada terminal com data-typed="1" depois de tratá-lo).
+     FIX: os terminais dentro de .terminal-panel (seção de tutorial) são geridos
+     inteiramente pelo tutorial.js, que só seta data-typed depois de digitar —
+     ou seja, no momento em que este forEach roda, esses terminais ainda NÃO têm
+     data-typed e seriam pegos pelos dois scripts ao mesmo tempo, causando
+     digitação duplicada/corrompida. Por isso são explicitamente ignorados aqui. */
   document.querySelectorAll('.terminal-body:not([data-typed])').forEach((terminalBody) => {
+    if (terminalBody.closest('.terminal-panel')) return; // gerido exclusivamente pelo tutorial.js
+
     const defaultLines = [
       { prompt: '$ ', text: 'turbina install --target=all', cls: '' },
       { prompt: '', text: 'Resolvendo dependências...', cls: 'muted-l' },
@@ -261,14 +268,20 @@
     return false;
   };
 
-  /* ---------- Detecção de sistema operacional (recomendação, não bloqueio) ---------- */
+  /* ---------- Detecção de sistema operacional (recomendação, não bloqueio) ----------
+     FIX: antes esta função não reutilizava isMobileOrTablet(), então um iPad
+     moderno (que se anuncia como "MacIntel" na UA) caía direto no
+     `combined.includes('mac')` e era classificado como 'mac'. Isso fazia o
+     toast de download aparecer para usuários de iPad recomendando o card
+     de macOS — que fica travado (is-locked) para eles no bloco de cards,
+     por conta do `mobileDevice` checado separadamente ali embaixo.
+     Agora a mesma checagem de mobile/tablet é aplicada aqui primeiro. */
   const detectOS = () => {
+    if (isMobileOrTablet()) return null;
+
     const ua = (navigator.userAgent || '').toLowerCase();
     const platform = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '').toLowerCase();
     const combined = `${platform} ${ua}`;
-
-    // celular/tablet: não faz sentido recomendar um instalador de desktop
-    if (/android|iphone|ipad|ipod|mobile/.test(combined)) return null;
 
     if (combined.includes('mac')) return 'mac';
     if (combined.includes('win')) return 'win';
@@ -320,12 +333,12 @@
      toast, ele não aparece mais nessa nem em visitas futuras
      (guardado em localStorage). Também não dispara se a aba estiver
      em segundo plano no momento do gatilho.
-     Continua condicionado a `detectedOS`, que já é `null` em qualquer
-     mobile/tablet — então o toast automaticamente não aparece pra quem
-     está no celular, sem precisar checar `mobileDevice` aqui também. */
+     Continua condicionado a `detectedOS`, que agora é `null` de forma
+     confiável em qualquer mobile/tablet (inclusive iPad) — então o
+     toast automaticamente não aparece pra quem está no celular, sem
+     precisar checar `mobileDevice` aqui também. */
   if (detectedOS) {
     const STORAGE_KEY = 'turbina-toast-dismissed';
-    const SITE_URL = 'https://turbina-6fh.pages.dev';
     const labels = { win: 'Windows', mac: 'macOS', linux: 'Linux' };
     const targetCard = document.querySelector(`.os-${detectedOS}`);
     const targetBtn = targetCard ? targetCard.querySelector('.os-download') : null;
@@ -334,9 +347,11 @@
     if (targetCard && !targetCard.id) {
       targetCard.id = `os-${detectedOS}`;
     }
-    const targetHref = targetCard
-      ? `${SITE_URL}/#${targetCard.id}`
-      : `${SITE_URL}/#scripts`; // fallback: seção geral, caso o card não seja encontrado
+    // FIX: usar hash relativo em vez de URL absoluta com domínio fixo
+    // (o valor anterior, 'https://turbina-6fh.pages.dev', fazia o link do
+    // toast navegar para fora do site sempre que o domínio de produção
+    // fosse diferente desse — por exemplo, ao configurar um domínio próprio).
+    const targetHref = targetCard ? `#${targetCard.id}` : '#scripts';
 
     let alreadyHandled = localStorage.getItem(STORAGE_KEY) === '1';
     let toastEl = null;
@@ -375,15 +390,12 @@
       toast.querySelector('.os-toast-link').addEventListener('click', (e) => {
         persistDismissed();
         hideToast();
-        // se já estamos na mesma página, o hash pode não mudar (ou já ser o mesmo),
-        // e nesse caso o navegador não rola sozinho — então garantimos na mão.
-        if (window.location.origin + window.location.pathname === SITE_URL + '/' ||
-            window.location.href.startsWith(SITE_URL)) {
-          if (targetCard) {
-            e.preventDefault();
-            history.pushState(null, '', targetHref.replace(SITE_URL, ''));
-            targetCard.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
-          }
+        // link agora é sempre same-page (hash relativo), então garantimos
+        // o scroll manualmente sempre que o card-alvo existir.
+        if (targetCard) {
+          e.preventDefault();
+          history.pushState(null, '', targetHref);
+          targetCard.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
         }
       });
       toast.querySelector('.os-toast-close').addEventListener('click', () => {
