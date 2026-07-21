@@ -746,6 +746,20 @@ summary:focus-visible,
   border-radius: 100px;
 }
 
+.os-card.is-locked {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+.os-card.is-locked:hover {
+  opacity: 0.8;
+  filter: grayscale(0.15);
+}
+.os-card.is-locked .os-download {
+  font-size: 0.76rem;
+  cursor: not-allowed;
+}
+
 /* ---------- Footer ---------- */
 footer {
   border-top: 1px solid var(--line);
