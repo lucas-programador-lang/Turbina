@@ -235,20 +235,100 @@
     </div>
   </section>
 
-  <!-- TERMINAL PREVIEW -->
-  <section class="terminal-section wrap">
+  <!-- TUTORIAL / PRÉVIA -->
+  <section class="terminal-section wrap" id="tutorial">
     <div class="section-head">
-      <span class="eyebrow"><span class="dot"></span> PRÉVIA</span>
-      <h2 class="section-title">Nada de caixa preta. Você vê cada comando.</h2>
-      <p>O menu explica o que vai acontecer antes de você confirmar — em português, sem jargão técnico escondido.</p>
+      <span class="eyebrow"><span class="dot"></span> TUTORIAL</span>
+      <h2 class="section-title">Nada de caixa preta. Veja como é, passo a passo.</h2>
+      <p>O menu explica o que vai acontecer antes de você confirmar — em português, sem jargão técnico escondido. Este terminal é ilustrativo: baixe o script do seu sistema lá em cima para usar de verdade.</p>
     </div>
-    <div class="terminal-window">
-      <div class="terminal-bar">
-        <span></span><span></span><span></span>
-        <span class="path">~/turbina — zsh</span>
+
+    <div class="tutorial-tabs" role="tablist" aria-label="Escolha o sistema para ver o tutorial">
+      <button class="tutorial-tab is-active" data-os="win" role="tab" aria-selected="true" id="tutorial-tab-win" aria-controls="tutorial-panel-win">Windows</button>
+      <button class="tutorial-tab" data-os="mac" role="tab" aria-selected="false" id="tutorial-tab-mac" aria-controls="tutorial-panel-mac">macOS</button>
+      <button class="tutorial-tab" data-os="linux" role="tab" aria-selected="false" id="tutorial-tab-linux" aria-controls="tutorial-panel-linux">Linux</button>
+    </div>
+
+    <!-- WINDOWS -->
+    <div class="terminal-panel is-active" data-os-panel="win" id="tutorial-panel-win" role="tabpanel" aria-labelledby="tutorial-tab-win">
+      <ol class="tutorial-steps">
+        <li>Baixe o <code>turbina-windows.bat</code> na seção acima.</li>
+        <li>Clique com o botão direito no arquivo → <strong>Executar como administrador</strong>.</li>
+        <li>Escolha as opções no menu numerado que aparece.</li>
+      </ol>
+      <div class="terminal-window no-copy">
+        <div class="terminal-bar">
+          <span></span><span></span><span></span>
+          <span class="path">turbina-windows.bat — Prompt de Comando</span>
+        </div>
+        <div class="terminal-body" data-lines='[
+          {"prompt":"C:\\turbina> ","text":"turbina-windows.bat"},
+          {"prompt":"","text":"Verificando privilégios de administrador... OK","cls":"muted-l"},
+          {"prompt":"","text":"Criando ponto de restauração do sistema...","cls":"muted-l"},
+          {"prompt":"","text":"Ponto de restauração criado com sucesso ✓"},
+          {"prompt":"","text":"==========================================================","cls":"muted-l"},
+          {"prompt":"","text":"     TURBINA - OTIMIZADOR DE WINDOWS","cls":"muted-l"},
+          {"prompt":"","text":"==========================================================","cls":"muted-l"},
+          {"prompt":"","text":" 12 - Desativar programas de inicialização desnecessários"},
+          {"prompt":"","text":"Isso vai listar os programas que abrem junto com o Windows."},
+          {"prompt":"","text":"Deseja continuar? (S/N):","cls":"muted-l"}
+        ]'></div>
       </div>
-      <div class="terminal-body" data-lines='[{"prompt":"$ ","text":"./turbina-linux.sh"},{"prompt":"","text":"==========================================================","cls":"muted-l"},{"prompt":"","text":"     TURBINA - OTIMIZADOR DE LINUX","cls":"muted-l"},{"prompt":"","text":"==========================================================","cls":"muted-l"},{"prompt":"","text":" 5  - Ajustar swappiness (uso de RAM x swap)"},{"prompt":"","text":"Valor atual do swappiness: 60"},{"prompt":"","text":"Deseja ajustar o swappiness para 10? (s/N):","cls":"muted-l"}]'></div>
     </div>
+
+    <!-- MAC -->
+    <div class="terminal-panel" data-os-panel="mac" id="tutorial-panel-mac" role="tabpanel" aria-labelledby="tutorial-tab-mac" hidden>
+      <ol class="tutorial-steps">
+        <li>Baixe o <code>turbina-mac.sh</code> na seção acima.</li>
+        <li>Abra o Terminal na pasta do arquivo e rode <code>chmod +x turbina-mac.sh</code>.</li>
+        <li>Execute com <code>./turbina-mac.sh</code> e escolha as opções.</li>
+      </ol>
+      <div class="terminal-window no-copy">
+        <div class="terminal-bar">
+          <span></span><span></span><span></span>
+          <span class="path">~/turbina — zsh</span>
+        </div>
+        <div class="terminal-body" data-lines='[
+          {"prompt":"$ ","text":"chmod +x turbina-mac.sh"},
+          {"prompt":"$ ","text":"./turbina-mac.sh"},
+          {"prompt":"","text":"Solicitando senha de administrador...","cls":"muted-l"},
+          {"prompt":"","text":"Limpando cache do sistema..."},
+          {"prompt":"","text":"3.2 GB de cache removidos ✓"},
+          {"prompt":"","text":"==========================================================","cls":"muted-l"},
+          {"prompt":"","text":"     TURBINA - OTIMIZADOR DE macOS","cls":"muted-l"},
+          {"prompt":"","text":"==========================================================","cls":"muted-l"},
+          {"prompt":"","text":" 7 - Reiniciar Finder e Dock"},
+          {"prompt":"","text":"Isso vai fechar e reabrir o Finder e o Dock automaticamente."},
+          {"prompt":"","text":"Deseja continuar? (s/N):","cls":"muted-l"}
+        ]'></div>
+      </div>
+    </div>
+
+    <!-- LINUX -->
+    <div class="terminal-panel" data-os-panel="linux" id="tutorial-panel-linux" role="tabpanel" aria-labelledby="tutorial-tab-linux" hidden>
+      <ol class="tutorial-steps">
+        <li>Baixe o <code>turbina-linux.sh</code> na seção acima.</li>
+        <li>Abra o terminal na pasta do arquivo e rode <code>chmod +x turbina-linux.sh</code>.</li>
+        <li>Execute com <code>./turbina-linux.sh</code> e escolha as opções.</li>
+      </ol>
+      <div class="terminal-window no-copy">
+        <div class="terminal-bar">
+          <span></span><span></span><span></span>
+          <span class="path">~/turbina — zsh</span>
+        </div>
+        <div class="terminal-body" data-lines='[
+          {"prompt":"$ ","text":"chmod +x turbina-linux.sh"},
+          {"prompt":"$ ","text":"./turbina-linux.sh"},
+          {"prompt":"","text":"==========================================================","cls":"muted-l"},
+          {"prompt":"","text":"     TURBINA - OTIMIZADOR DE LINUX","cls":"muted-l"},
+          {"prompt":"","text":"==========================================================","cls":"muted-l"},
+          {"prompt":"","text":" 5 - Ajustar swappiness (uso de RAM x swap)"},
+          {"prompt":"","text":"Valor atual do swappiness: 60"},
+          {"prompt":"","text":"Deseja ajustar o swappiness para 10? (s/N):","cls":"muted-l"}
+        ]'></div>
+      </div>
+    </div>
+
   </section>
 
   <!-- FAQ -->
@@ -297,5 +377,6 @@
 </button>
 
 <script src="assets/js/script.js"></script>
+<script src="assets/js/tutorial.js"></script>
 </body>
 </html>
