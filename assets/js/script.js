@@ -86,9 +86,10 @@
     });
   }
 
-  /* ---------- Terminal: digitação real (dispara uma vez, ao entrar em viewport) ---------- */
-  const terminalBody = document.querySelector('.terminal-body');
-  if (terminalBody) {
+  /* ---------- Terminal genérico: digitação real (dispara uma vez, ao entrar em viewport) ----------
+     Roda em QUALQUER .terminal-body que ainda não tenha sido tratado pelo
+     tutorial.js (que marca cada terminal com data-typed="1" depois de tratá-lo). */
+  document.querySelectorAll('.terminal-body:not([data-typed])').forEach((terminalBody) => {
     const defaultLines = [
       { prompt: '$ ', text: 'turbina install --target=all', cls: '' },
       { prompt: '', text: 'Resolvendo dependências...', cls: 'muted-l' },
@@ -172,7 +173,7 @@
       }, { threshold: 0.4 });
       observer.observe(terminalBody);
     }
-  }
+  });
 
   /* ---------- Tilt 3D nos cards de sistema ---------- */
   const tiltCards = document.querySelectorAll('[data-tilt]');
