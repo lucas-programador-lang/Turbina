@@ -68,42 +68,42 @@ exit /b 1
 :: ==========================================================================
 :MENU
 cls
-echo ╔══════════════════════════════════════════════════════════════════╗
-echo ║          OTIMIZADOR DE WINDOWS - MENU PRINCIPAL v5 (Definitiva)     ║
-echo ╠══════════════════════════════════════════════════════════════════╣
-echo ║   1  - Limpeza completa (temp, lixeira, update cache, prefetch)    ║
-echo ║   2  - Ajustar efeitos visuais para performance                    ║
-echo ║   3  - Ativar plano de energia Alto Desempenho                     ║
-echo ║   4  - Desativar dicas/sugestoes/anuncios do Windows                ║
-echo ║   5  - Desativar telemetria e rastreamento (privacidade)            ║
-echo ║   6  - Gerenciar servicos desnecessarios                           ║
-echo ║   7  - Ver e desativar programas de inicializacao                   ║
-echo ║   8  - Otimizar disco (detecta SSD ou HD automaticamente)          ║
-echo ║   9  - Desativar Xbox Game Bar / gravacao em segundo plano          ║
-echo ║   10 - Limpar DNS e resetar rede                                   ║
-echo ║   11 - Criar ponto de restauracao do sistema                       ║
-echo ╠══════════════════════════════════════════════════════════════════╣
-echo ║   12 - Remover bloatware (apps inuteis da Microsoft)                ║
-echo ║   13 - Otimizar memoria virtual (pagefile)                          ║
-echo ║   14 - Desativar hibernacao (libera espaco em disco)                ║
-echo ║   15 - Limpeza avancada (updates antigos, Windows.old, WinSxS)      ║
-echo ║   16 - Desativar apps em segundo plano                              ║
-echo ║   17 - Ajustar SysMain/Superfetch (automatico p/ SSD ou HD)         ║
-echo ║   18 - Desativar tarefas agendadas de telemetria                    ║
-echo ║   19 - Dar prioridade ao programa em uso (ajuda CPU fraca)          ║
-echo ╠══════════════════════════════════════════════════════════════════╣
-echo ║   21 - Turbo de internet (otimizar TCP/IP - jogos/streaming)        ║
-echo ║   22 - Trocar DNS para servidor mais rapido (Cloudflare/Google)     ║
-echo ║   23 - Desativar Delivery Optimization (economiza internet)         ║
-echo ║   24 - Deixar menus e janelas mais rapidos                          ║
-echo ║   25 - Reduzir escritas desnecessarias no disco                     ║
-echo ║   26 - Limpar logs antigos do Visualizador de Eventos               ║
-echo ║   27 - Verificar/reparar arquivos do sistema (SFC+DISM - demorado)  ║
-echo ║   28 - Agendar verificacao de disco no proximo boot (CHKDSK)        ║
-echo ╠══════════════════════════════════════════════════════════════════╣
-echo ║   20 - RODAR TUDO SEGURO (nao inclui 12,14,22,27,28)                ║
-echo ║   0  - Sair                                                         ║
-echo ╚══════════════════════════════════════════════════════════════════╝
+echo +==================================================================+
+echo |          OTIMIZADOR DE WINDOWS - MENU PRINCIPAL v5 (Definitiva)     |
+echo +==================================================================+
+echo |   1  - Limpeza completa (temp, lixeira, update cache, prefetch)    |
+echo |   2  - Ajustar efeitos visuais para performance                    |
+echo |   3  - Ativar plano de energia Alto Desempenho                     |
+echo |   4  - Desativar dicas/sugestoes/anuncios do Windows                |
+echo |   5  - Desativar telemetria e rastreamento (privacidade)            |
+echo |   6  - Gerenciar servicos desnecessarios                           |
+echo |   7  - Ver e desativar programas de inicializacao                   |
+echo |   8  - Otimizar disco (detecta SSD ou HD automaticamente)          |
+echo |   9  - Desativar Xbox Game Bar / gravacao em segundo plano          |
+echo |   10 - Limpar DNS e resetar rede                                   |
+echo |   11 - Criar ponto de restauracao do sistema                       |
+echo +==================================================================+
+echo |   12 - Remover bloatware (apps inuteis da Microsoft)                |
+echo |   13 - Otimizar memoria virtual (pagefile)                          |
+echo |   14 - Desativar hibernacao (libera espaco em disco)                |
+echo |   15 - Limpeza avancada (updates antigos, Windows.old, WinSxS)      |
+echo |   16 - Desativar apps em segundo plano                              |
+echo |   17 - Ajustar SysMain/Superfetch (automatico p/ SSD ou HD)         |
+echo |   18 - Desativar tarefas agendadas de telemetria                    |
+echo |   19 - Dar prioridade ao programa em uso (ajuda CPU fraca)          |
+echo +==================================================================+
+echo |   21 - Turbo de internet (otimizar TCP/IP - jogos/streaming)        |
+echo |   22 - Trocar DNS para servidor mais rapido (Cloudflare/Google)     |
+echo |   23 - Desativar Delivery Optimization (economiza internet)         |
+echo |   24 - Deixar menus e janelas mais rapidos                          |
+echo |   25 - Reduzir escritas desnecessarias no disco                     |
+echo |   26 - Limpar logs antigos do Visualizador de Eventos               |
+echo |   27 - Verificar/reparar arquivos do sistema (SFC+DISM - demorado)  |
+echo |   28 - Agendar verificacao de disco no proximo boot (CHKDSK)        |
+echo +==================================================================+
+echo |   20 - RODAR TUDO SEGURO (nao inclui 12,14,22,27,28)                |
+echo |   0  - Sair                                                         |
+echo +==================================================================+
 echo.
 set /p opc="Escolha uma opcao: "
 
@@ -648,12 +648,12 @@ exit /b
 :: ==========================================================================
 :TUDO
 echo.
-echo ══════════════════════════════════════════════════════════════
+echo ==============================================================
 echo   Rodando otimizacoes seguras automaticamente...
 echo   (bloatware, hibernacao, troca de DNS, SFC/DISM e CHKDSK
 echo    ficam de fora - use as opcoes 12, 14, 22, 27, 28
 echo    manualmente se quiser)
-echo ══════════════════════════════════════════════════════════════
+echo ==============================================================
 call :LOG "=== Iniciando rotina TUDO (opcao 20) ==="
 call :RESTAURACAO_CORE
 call :LIMPEZA
@@ -677,10 +677,10 @@ call :LASTACCESS
 call :LIMPAR_LOGS
 call :DISCO
 echo.
-echo ══════════════════════════════════════════════════════════════
+echo ==============================================================
 echo   TUDO CONCLUIDO! Reinicie o computador para aplicar
 echo   todas as mudancas por completo.
-echo ══════════════════════════════════════════════════════════════
+echo ==============================================================
 call :LOG "=== Rotina TUDO concluida ==="
 pause
 exit /b
