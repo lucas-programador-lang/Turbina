@@ -46,8 +46,8 @@ flush_dns() {
 
 reiniciar_finder_dock() {
     echo -e "${CYAN}[Interface] Reiniciando Finder e Dock...${NC}"
-    killall Finder
-    killall Dock
+    killall Finder 2>/dev/null
+    killall Dock 2>/dev/null
     echo "Concluido!" | tee -a "$LOGFILE"
     pause
 }
@@ -55,7 +55,12 @@ reiniciar_finder_dock() {
 verificar_disco() {
     echo -e "${CYAN}[Disco] Verificando o disco principal...${NC}"
     diskutil verifyVolume /
-    echo "Concluido! Se houver erros, use o Disk Utility (modo de recuperacao) para reparar." | tee -a "$LOGFILE"
+    echo ""
+    echo -e "${YELLOW}[NOTA]${NC} Em macOS recentes com APFS, a verificacao do"
+    echo "volume de boot enquanto o sistema esta em uso costuma ser"
+    echo "limitada. Para um diagnostico completo, use o Disk Utility"
+    echo "pelo modo de Recuperacao (reinicie segurando Cmd+R)."
+    echo "Concluido! Se houver erros, repare por la." | tee -a "$LOGFILE"
     pause
 }
 
@@ -70,6 +75,11 @@ limpar_logs() {
     echo -e "${CYAN}[Logs] Limpando logs antigos do sistema...${NC}"
     sudo rm -rf /private/var/log/asl/*.asl 2>/dev/null
     sudo log erase --all 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo -e "${YELLOW}[NOTA]${NC} Parte dos logs do sistema e protegida pelo"
+        echo "System Integrity Protection (SIP) e nao pode ser apagada."
+        echo "Os logs de arquivo (.asl) que puderam ser removidos, foram."
+    fi
     echo "Concluido!" | tee -a "$LOGFILE"
     pause
 }
@@ -90,13 +100,20 @@ espaco_disco() {
     echo -e "${CYAN}[Espaco] Verificando espaco livre em disco...${NC}"
     df -h /
     echo ""
-    echo "Pastas que mais ocupam espaco em Downloads/Documents (top 10):"
-    du -sh "$HOME/Downloads/"* 2>/dev/null | sort -rh | head -10
+    echo "Pastas que mais ocupam espaco em Downloads e Documents (top 10):"
+    du -sh "$HOME/Downloads/"* "$HOME/Documents/"* 2>/dev/null | sort -rh | head -10
     pause
 }
 
 purgar_memoria() {
     echo -e "${CYAN}[Memoria] Liberando memoria inativa (RAM)...${NC}"
+    if ! command -v purge &>/dev/null; then
+        echo -e "${RED}[ERRO]${NC} O comando 'purge' nao foi encontrado. Ele faz"
+        echo "parte das Ferramentas de Linha de Comando do Xcode. Instale com:"
+        echo "  xcode-select --install"
+        pause
+        return
+    fi
     sudo purge
     echo "Concluido!" | tee -a "$LOGFILE"
     pause
@@ -114,41 +131,43 @@ tudo() {
 }
 
 menu() {
-    clear
-    echo "=========================================================="
-    echo "         TURBINA - OTIMIZADOR DE macOS"
-    echo "=========================================================="
-    echo ""
-    echo "  1  - Limpeza de cache (sistema e apps)"
-    echo "  2  - Limpar cache de DNS"
-    echo "  3  - Reiniciar Finder e Dock"
-    echo "  4  - Verificar disco"
-    echo "  5  - Gerenciar itens de login (inicializacao)"
-    echo "  6  - Limpar logs antigos"
-    echo "  7  - Reindexar Spotlight (demorado)"
-    echo "  8  - Ver espaco em disco e pastas grandes"
-    echo "  9  - Liberar memoria RAM inativa"
-    echo "  ----------------------------------------------------------"
-    echo "  10 - RODAR TUDO SEGURO (recomendado)"
-    echo "  0  - Sair"
-    echo ""
-    echo "=========================================================="
-    read -rp "Escolha uma opcao: " opc
+    while true; do
+        clear
+        echo "=========================================================="
+        echo "         TURBINA - OTIMIZADOR DE macOS"
+        echo "=========================================================="
+        echo ""
+        echo "  1  - Limpeza de cache (sistema e apps)"
+        echo "  2  - Limpar cache de DNS"
+        echo "  3  - Reiniciar Finder e Dock"
+        echo "  4  - Verificar disco"
+        echo "  5  - Gerenciar itens de login (inicializacao)"
+        echo "  6  - Limpar logs antigos"
+        echo "  7  - Reindexar Spotlight (demorado)"
+        echo "  8  - Ver espaco em disco e pastas grandes"
+        echo "  9  - Liberar memoria RAM inativa"
+        echo "  ----------------------------------------------------------"
+        echo "  10 - RODAR TUDO SEGURO (recomendado)"
+        echo "  0  - Sair"
+        echo ""
+        echo "=========================================================="
+        read -rp "Escolha uma opcao: " opc
 
-    case $opc in
-        1) limpeza ;;
-        2) flush_dns ;;
-        3) reiniciar_finder_dock ;;
-        4) verificar_disco ;;
-        5) itens_login ;;
-        6) limpar_logs ;;
-        7) reindexar_spotlight ;;
-        8) espaco_disco ;;
-        9) purgar_memoria ;;
-        10) tudo ;;
-        0) exit 0 ;;
-    esac
-    menu
+        case $opc in
+            1) limpeza ;;
+            2) flush_dns ;;
+            3) reiniciar_finder_dock ;;
+            4) verificar_disco ;;
+            5) itens_login ;;
+            6) limpar_logs ;;
+            7) reindexar_spotlight ;;
+            8) espaco_disco ;;
+            9) purgar_memoria ;;
+            10) tudo ;;
+            0) exit 0 ;;
+            *) echo -e "${RED}Opcao invalida.${NC}"; sleep 1 ;;
+        esac
+    done
 }
 
 menu
