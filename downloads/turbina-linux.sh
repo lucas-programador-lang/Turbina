@@ -10,6 +10,7 @@
 #   3. ./turbina-linux.sh
 # ==========================================================
 
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
@@ -49,7 +50,12 @@ limpeza_pacotes() {
             ;;
         pacman)
             sudo pacman -Sc --noconfirm
-            sudo pacman -Rns $(pacman -Qtdq) --noconfirm 2>/dev/null
+            orfaos=$(pacman -Qtdq 2>/dev/null)
+            if [ -n "$orfaos" ]; then
+                sudo pacman -Rns $orfaos --noconfirm
+            else
+                echo "Nenhum pacote orfao encontrado."
+            fi
             ;;
         zypper)
             sudo zypper clean --all
@@ -64,8 +70,12 @@ limpeza_pacotes() {
 
 limpar_logs() {
     echo -e "${CYAN}[Logs] Reduzindo logs do systemd para os ultimos 7 dias...${NC}"
-    sudo journalctl --vacuum-time=7d
-    echo "Concluido!" | tee -a "$LOGFILE"
+    if command -v journalctl &>/dev/null; then
+        sudo journalctl --vacuum-time=7d
+        echo "Concluido!" | tee -a "$LOGFILE"
+    else
+        echo -e "${YELLOW}[AVISO]${NC} journalctl nao encontrado (sistema sem systemd-journald). Pulei esta etapa."
+    fi
     pause
 }
 
@@ -73,17 +83,25 @@ flush_dns() {
     echo -e "${CYAN}[DNS] Limpando cache de DNS (systemd-resolved)...${NC}"
     if command -v resolvectl &>/dev/null; then
         sudo resolvectl flush-caches
+        echo "Concluido!" | tee -a "$LOGFILE"
+    elif command -v systemd-resolve &>/dev/null; then
+        sudo systemd-resolve --flush-caches
+        echo "Concluido!" | tee -a "$LOGFILE"
     else
-        sudo systemd-resolve --flush-caches 2>/dev/null
+        echo -e "${YELLOW}[AVISO]${NC} Nenhuma ferramenta de systemd-resolved encontrada."
+        echo "Seu sistema pode estar usando outro resolvedor de DNS (ex: dnsmasq)."
     fi
-    echo "Concluido!" | tee -a "$LOGFILE"
     pause
 }
 
 trim_ssd() {
     echo -e "${CYAN}[Disco] Rodando TRIM (otimizacao para SSD)...${NC}"
-    sudo fstrim -av
-    echo "Concluido! (se seu disco for HD tradicional, este comando nao faz nada)" | tee -a "$LOGFILE"
+    if command -v fstrim &>/dev/null; then
+        sudo fstrim -av
+        echo "Concluido! (se seu disco for HD tradicional, este comando nao faz nada)" | tee -a "$LOGFILE"
+    else
+        echo -e "${YELLOW}[AVISO]${NC} Comando 'fstrim' nao encontrado neste sistema."
+    fi
     pause
 }
 
@@ -105,17 +123,25 @@ swappiness() {
 
 servicos_ativos() {
     echo -e "${CYAN}[Servicos] Listando servicos ativados na inicializacao:${NC}"
-    systemctl list-unit-files --state=enabled --type=service
-    echo ""
-    echo "Para desativar um servico que voce nao usa, rode:"
-    echo "  sudo systemctl disable nome-do-servico"
+    if command -v systemctl &>/dev/null; then
+        systemctl list-unit-files --state=enabled --type=service
+        echo ""
+        echo "Para desativar um servico que voce nao usa, rode:"
+        echo "  sudo systemctl disable nome-do-servico"
+    else
+        echo -e "${YELLOW}[AVISO]${NC} systemctl nao encontrado neste sistema."
+    fi
     pause
 }
 
 cache_fontes() {
     echo -e "${CYAN}[Fontes] Reconstruindo cache de fontes...${NC}"
-    fc-cache -f -v >/dev/null 2>&1
-    echo "Concluido!" | tee -a "$LOGFILE"
+    if command -v fc-cache &>/dev/null; then
+        fc-cache -f -v >/dev/null 2>&1
+        echo "Concluido!" | tee -a "$LOGFILE"
+    else
+        echo -e "${YELLOW}[AVISO]${NC} fc-cache nao encontrado. Instale o pacote fontconfig."
+    fi
     pause
 }
 
@@ -140,39 +166,41 @@ tudo() {
 }
 
 menu() {
-    clear
-    echo "=========================================================="
-    echo "         TURBINA - OTIMIZADOR DE LINUX"
-    echo "=========================================================="
-    echo ""
-    echo "  1  - Limpar pacotes orfaos e cache do gerenciador"
-    echo "  2  - Reduzir logs antigos do sistema (journalctl)"
-    echo "  3  - Limpar cache de DNS"
-    echo "  4  - Rodar TRIM no SSD"
-    echo "  5  - Ajustar swappiness (uso de RAM x swap)"
-    echo "  6  - Ver servicos ativos na inicializacao"
-    echo "  7  - Reconstruir cache de fontes"
-    echo "  8  - Ver espaco em disco e pastas grandes"
-    echo "  ----------------------------------------------------------"
-    echo "  9  - RODAR TUDO SEGURO (recomendado)"
-    echo "  0  - Sair"
-    echo ""
-    echo "=========================================================="
-    read -rp "Escolha uma opcao: " opc
+    while true; do
+        clear
+        echo "=========================================================="
+        echo "         TURBINA - OTIMIZADOR DE LINUX"
+        echo "=========================================================="
+        echo ""
+        echo "  1  - Limpar pacotes orfaos e cache do gerenciador"
+        echo "  2  - Reduzir logs antigos do sistema (journalctl)"
+        echo "  3  - Limpar cache de DNS"
+        echo "  4  - Rodar TRIM no SSD"
+        echo "  5  - Ajustar swappiness (uso de RAM x swap)"
+        echo "  6  - Ver servicos ativos na inicializacao"
+        echo "  7  - Reconstruir cache de fontes"
+        echo "  8  - Ver espaco em disco e pastas grandes"
+        echo "  ----------------------------------------------------------"
+        echo "  9  - RODAR TUDO SEGURO (recomendado)"
+        echo "  0  - Sair"
+        echo ""
+        echo "=========================================================="
+        read -rp "Escolha uma opcao: " opc
 
-    case $opc in
-        1) limpeza_pacotes ;;
-        2) limpar_logs ;;
-        3) flush_dns ;;
-        4) trim_ssd ;;
-        5) swappiness ;;
-        6) servicos_ativos ;;
-        7) cache_fontes ;;
-        8) espaco_disco ;;
-        9) tudo ;;
-        0) exit 0 ;;
-    esac
-    menu
+        case $opc in
+            1) limpeza_pacotes ;;
+            2) limpar_logs ;;
+            3) flush_dns ;;
+            4) trim_ssd ;;
+            5) swappiness ;;
+            6) servicos_ativos ;;
+            7) cache_fontes ;;
+            8) espaco_disco ;;
+            9) tudo ;;
+            0) exit 0 ;;
+            *) echo -e "${RED}Opcao invalida.${NC}"; sleep 1 ;;
+        esac
+    done
 }
 
 menu
