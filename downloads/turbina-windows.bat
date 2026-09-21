@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul
-title Otimizador de Windows - Menu v4
+title Otimizador de Windows - Menu v5
 color 0A
 
 :: ==========================================================
-::  OTIMIZADOR DE WINDOWS 10/11 - VERSAO 4 (COMPLETA)
+::  OTIMIZADOR DE WINDOWS 10/11 - VERSAO 5 (COMPLETA)
 ::  Funciona em qualquer PC (detecta SSD/HD automaticamente)
 :: ==========================================================
 :: Execute como Administrador!
@@ -27,7 +27,7 @@ echo Log de otimizacao - %DATE% %TIME% > "%LOGFILE%"
 :MENU
 cls
 echo ==========================================================
-echo             OTIMIZADOR DE WINDOWS - MENU PRINCIPAL v4
+echo             OTIMIZADOR DE WINDOWS - MENU PRINCIPAL v5
 echo ==========================================================
 echo.
 echo   1  - Limpeza completa (temp, lixeira, update cache, prefetch)
@@ -60,7 +60,7 @@ echo   26 - Limpar logs antigos do Visualizador de Eventos
 echo   27 - Verificar/reparar arquivos do sistema (SFC+DISM - demorado)
 echo   28 - Agendar verificacao de disco no proximo boot (CHKDSK)
 echo   ----------------------------------------------------------
-echo   20 - RODAR TUDO SEGURO (recomendado - nao inclui 12,14,22,27,28)
+echo   29 - RODAR TUDO SEGURO (recomendado - nao inclui 12,14,22,27,28)
 echo   0  - Sair
 echo.
 echo ==========================================================
@@ -85,7 +85,6 @@ if "%opc%"=="16" call :BACKGROUND_APPS & goto MENU
 if "%opc%"=="17" call :SYSMAIN & goto MENU
 if "%opc%"=="18" call :TAREFAS & goto MENU
 if "%opc%"=="19" call :PRIORIDADE & goto MENU
-if "%opc%"=="20" call :TUDO & goto MENU
 if "%opc%"=="21" call :TURBO_NET & goto MENU
 if "%opc%"=="22" call :DNS & goto MENU
 if "%opc%"=="23" call :DELIVERY & goto MENU
@@ -94,7 +93,11 @@ if "%opc%"=="25" call :LASTACCESS & goto MENU
 if "%opc%"=="26" call :LIMPAR_LOGS & goto MENU
 if "%opc%"=="27" call :SFC_DISM & goto MENU
 if "%opc%"=="28" call :CHKDSK & goto MENU
+if "%opc%"=="29" call :TUDO & goto MENU
 if "%opc%"=="0" exit /b
+echo.
+echo [AVISO] Opcao invalida. Tente novamente.
+pause
 goto MENU
 
 :: ==========================================================
@@ -189,8 +192,9 @@ exit /b
 :: ==========================================================
 :DISCO
 echo.
-echo [Disco] Detectando tipo de disco (SSD ou HD)...
-for /f "tokens=2 delims==" %%a in ('wmic diskdrive get MediaType /value ^| find "MediaType"') do set TIPO=%%a
+echo [Disco] Detectando tipo de disco (SSD ou HD) via PowerShell...
+set TIPO=Desconhecido
+for /f "usebackq delims=" %%a in (`powershell -NoProfile -Command "(Get-PhysicalDisk | Select-Object -First 1 -ExpandProperty MediaType)"`) do set TIPO=%%a
 echo Tipo detectado: %TIPO%
 echo Otimizando disco C: (TRIM para SSD ou desfragmentacao para HD)...
 defrag C: /O
@@ -225,9 +229,16 @@ exit /b
 :RESTAURACAO
 echo.
 echo [Restauracao] Criando ponto de restauracao do sistema...
-powershell -Command "Checkpoint-Computer -Description 'Antes da otimizacao' -RestorePointType 'MODIFY_SETTINGS'" >nul 2>&1
-echo Concluido! Va em "Recuperacao" no Painel de Controle para
-echo restaurar o sistema para este ponto, se precisar.
+powershell -NoProfile -Command "Checkpoint-Computer -Description 'Antes da otimizacao' -RestorePointType 'MODIFY_SETTINGS'" >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [AVISO] Nao foi possivel criar o ponto de restauracao.
+    echo Isso pode acontecer se a Protecao do Sistema estiver
+    echo desativada no disco C: ou se ja foi criado um ponto
+    echo nas ultimas 24 horas ^(limite do Windows^).
+) else (
+    echo Concluido! Va em "Recuperacao" no Painel de Controle para
+    echo restaurar o sistema para este ponto, se precisar.
+)
 pause
 exit /b
 
@@ -245,22 +256,7 @@ if /i not "%conf%"=="S" (
     exit /b
 )
 echo Removendo bloatware, aguarde...
-powershell -Command "Get-AppxPackage *3DBuilder* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *MixedReality* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *BingWeather* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *BingNews* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *GetHelp* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *Getstarted* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *Messaging* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *SkypeApp* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *YourPhone* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *ZuneMusic* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *ZuneVideo* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *CandyCrush* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *Disney* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *Spotify* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *Twitter* | Remove-AppxPackage" >nul 2>&1
-powershell -Command "Get-AppxPackage *FeedbackHub* | Remove-AppxPackage" >nul 2>&1
+powershell -NoProfile -Command "$apps = '3DBuilder','MixedReality','BingWeather','BingNews','GetHelp','Getstarted','Messaging','SkypeApp','YourPhone','ZuneMusic','ZuneVideo','CandyCrush','Disney','Spotify','Twitter','FeedbackHub'; foreach ($a in $apps) { Get-AppxPackage -AllUsers *$a* | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue }" >nul 2>&1
 echo Concluido! Apps de utilidade (Calculadora, Fotos, Loja etc)
 echo foram mantidos de proposito.
 pause
@@ -272,6 +268,9 @@ echo.
 echo [Memoria Virtual] Configurando gerenciamento automatico
 echo otimizado do arquivo de paginacao (pagefile)...
 wmic computersystem set AutomaticManagedPagefile=True >nul 2>&1
+if %errorLevel% neq 0 (
+    powershell -NoProfile -Command "(Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges).AutomaticManagedPagefile = $true; $cs = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges; $cs.AutomaticManagedPagefile = $true; $cs.Put() | Out-Null" >nul 2>&1
+)
 echo Concluido! O Windows agora gerencia a memoria virtual
 echo de forma automatica e otimizada com base na sua RAM.
 pause
@@ -321,17 +320,19 @@ exit /b
 :: ==========================================================
 :SYSMAIN
 echo.
-echo [SysMain/Superfetch] Detectando tipo de disco...
-for /f "tokens=2 delims==" %%a in ('wmic diskdrive get MediaType /value ^| find "MediaType"') do set TIPODISK=%%a
-echo %TIPODISK% | find "SSD" >nul
+echo [SysMain/Superfetch] Detectando tipo de disco via PowerShell...
+set TIPODISK=Unspecified
+for /f "usebackq delims=" %%a in (`powershell -NoProfile -Command "(Get-PhysicalDisk | Select-Object -First 1 -ExpandProperty MediaType)"`) do set TIPODISK=%%a
+echo %TIPODISK% | find /i "SSD" >nul
 if %errorlevel%==0 (
     echo Disco SSD detectado. Desativando SysMain
     echo ^(nao traz beneficio real em SSD^)...
     sc config SysMain start= disabled >nul 2>&1
     net stop SysMain >nul 2>&1
 ) else (
-    echo Disco HD tradicional detectado. Mantendo SysMain ATIVO
-    echo ^(ele ajuda a acelerar abertura de programas em HDs^)...
+    echo Disco HD tradicional ^(ou nao identificado^) detectado.
+    echo Mantendo SysMain ATIVO ^(ele ajuda a acelerar abertura
+    echo de programas em HDs^)...
     sc config SysMain start= auto >nul 2>&1
     net start SysMain >nul 2>&1
 )
@@ -391,13 +392,13 @@ echo   3 - Restaurar DNS automatico (padrao do provedor)
 echo   0 - Cancelar
 set /p dnsopc="Escolha uma opcao: "
 if "%dnsopc%"=="1" (
-    powershell -Command "Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Set-DnsClientServerAddress -ServerAddresses ('1.1.1.1','1.0.0.1')" >nul 2>&1
+    powershell -NoProfile -Command "Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Set-DnsClientServerAddress -ServerAddresses ('1.1.1.1','1.0.0.1')" >nul 2>&1
     echo Concluido! DNS Cloudflare aplicado.
 ) else if "%dnsopc%"=="2" (
-    powershell -Command "Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Set-DnsClientServerAddress -ServerAddresses ('8.8.8.8','8.8.4.4')" >nul 2>&1
+    powershell -NoProfile -Command "Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Set-DnsClientServerAddress -ServerAddresses ('8.8.8.8','8.8.4.4')" >nul 2>&1
     echo Concluido! DNS Google aplicado.
 ) else if "%dnsopc%"=="3" (
-    powershell -Command "Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Set-DnsClientServerAddress -ResetServerAddresses" >nul 2>&1
+    powershell -NoProfile -Command "Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Set-DnsClientServerAddress -ResetServerAddresses" >nul 2>&1
     echo Concluido! DNS automatico restaurado.
 ) else (
     echo Operacao cancelada.
@@ -485,7 +486,7 @@ if /i not "%conf%"=="S" (
     pause
     exit /b
 )
-echo Y| chkdsk C: /f /r >nul 2>&1
+echo Y| chkdsk C: /f /r
 echo Concluido! A verificacao vai rodar no proximo reinicio do PC.
 pause
 exit /b
